@@ -1,0 +1,55 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+
+body {
+  background-color: #f9f9f0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Lora', serif;
+}
+
+/* Checkbox & Radio custom style */
+input[type="checkbox"], input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+input[type="checkbox"] {
+  border-radius: 4px;
+}
+input[type="checkbox"]:checked {
+  background-color: #f5f5dc;
+  border-color: #f5f5dc;
+}
+input[type="checkbox"]:checked::before {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #4b5563;
+  font-size: 12px;
+}
+input[type="radio"] {
+  border-radius: 50%;
+}
+input[type="radio"]:checked {
+  border-color: #f5f5dc;
+}
+input[type="radio"]:checked::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #f5f5dc;
+  border-radius: 50%;
+}
