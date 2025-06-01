@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh toán</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.quantity-input {
+-moz-appearance: textfield;
+}
+</style>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#1e3a8a',secondary:'#64748b'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+</head>
+<body class="bg-[#F5F1EC]">
+<div class="container mx-auto p-4 max-w-6xl">
+<div class="flex flex-col md:flex-row gap-8">
+<!-- Cột trái - Tóm tắt đơn hàng -->
+<div class="w-full md:w-1/3 pt-6">
+<h2 class="font-bold text-xl mb-6 text-center">Đơn hàng</h2>
+<div class="space-y-4 mb-6">
+<!-- Sản phẩm 1 -->
+<div class="flex items-start gap-3 pb-3 border-b border-gray-200">
+<div class="w-16 h-20 bg-gray-100 flex-shrink-0">
+<img src="https://readdy.ai/api/search-image?query=book%20cover%20with%20red%20background%20and%20white%20text%2C%20minimalist%20design&width=64&height=80&seq=1&orientation=portrait" alt="Book cover" class="w-full h-full object-cover">
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-medium">It ends with us</h3>
+<p class="text-sm text-gray-500">By Colleen Hoover</p>
+</div>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center border rounded-md">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-md">
+<i class="ri-subtract-line"></i>
+</button>
+<input type="number" value="1" class="w-10 h-8 text-center border-x quantity-input" min="1">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-md">
+<i class="ri-add-line"></i>
+</button>
+</div>
+<span class="font-medium">15.500 VNĐ</span>
+</div>
+</div>
+</div>
+<!-- Sản phẩm 2 -->
+<div class="flex items-start gap-3 pb-3 border-b border-gray-200">
+<div class="w-16 h-20 bg-gray-100 flex-shrink-0">
+<img src="https://readdy.ai/api/search-image?query=book%20cover%20with%20pet%20theme%2C%20minimalist%20design%20with%20silhouette%20of%20a%20dog%20or%20cat&width=64&height=80&seq=2&orientation=portrait" alt="Book cover" class="w-full h-full object-cover">
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-medium">Pet</h3>
+<p class="text-sm text-gray-500">By Akwaeke Emezi</p>
+</div>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center border rounded-md">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-md">
+<i class="ri-subtract-line"></i>
+</button>
+<input type="number" value="1" class="w-10 h-8 text-center border-x quantity-input" min="1">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-md">
+<i class="ri-add-line"></i>
+</button>
+</div>
+<span class="font-medium">12.800 VNĐ</span>
+</div>
+</div>
+</div>
+<!-- Sản phẩm 3 -->
+<div class="flex items-start gap-3 pb-3 border-b border-gray-200">
+<div class="w-16 h-20 bg-gray-100 flex-shrink-0">
+<img src="https://readdy.ai/api/search-image?query=book%20cover%20with%20blue%20background%20and%20abstract%20design%2C%20contemporary%20fiction%20book%20cover&width=64&height=80&seq=3&orientation=portrait" alt="Book cover" class="w-full h-full object-cover">
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-medium">Yinka, where is your husband?</h3>
+<p class="text-sm text-gray-500">By Lizzie Damilola Blackburn</p>
+</div>
+<button class="text-gray-400 hover:text-gray-600">
+<i class="ri-close-line"></i>
+</button>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center border rounded-md">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-l-md">
+<i class="ri-subtract-line"></i>
+</button>
+<input type="number" value="1" class="w-10 h-8 text-center border-x quantity-input" min="1">
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-100 rounded-r-md">
+<i class="ri-add-line"></i>
+</button>
+</div>
+<span class="font-medium">10.000 VNĐ</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tổng tiền -->
+<div class="space-y-3 text-sm mt-8">
+<div class="flex justify-between">
+<span>Tạm tính</span>
+<span>38.300 VNĐ</span>
+</div>
+<div class="flex justify-between">
+<span>Phí vận chuyển</span>
+<span>0 VNĐ</span>
+</div>
+<div class="flex justify-between">
+<span>Thuế</span>
+<span>5.200 VNĐ</span>
+</div>
+<div class="flex justify-between font-bold text-lg pt-3 border-t border-gray-200">
+<span>Tổng cộng</span>
+<span>43.500 VNĐ</span>
+</div>
+</div>
+</div>
+<!-- Cột phải - Thông tin giao hàng -->
+<div class="w-full md:w-2/3 bg-white p-6 pt-6 rounded-lg shadow-sm">
+<h2 class="font-bold text-xl mb-6 text-center">Thông tin giao hàng</h2>
+<!-- Thanh tiến trình -->
+<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+<i class="ri-truck-line"></i>
+</div>
+<span class="text-sm mt-1 text-primary font-medium">Giao hàng</span>
+</div>
+<div class="flex-1 h-1 mx-2 bg-gray-200">
+<div class="h-full w-0 bg-primary"></div>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center">
+<i class="ri-bank-card-line"></i>
+</div>
+<span class="text-sm mt-1 text-gray-400">Thanh toán</span>
+</div>
+<div class="flex-1 h-1 mx-2 bg-gray-200">
+<div class="h-full w-0 bg-primary"></div>
+</div>
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center">
+<i class="ri-check-line"></i>
+</div>
+<span class="text-sm mt-1 text-gray-400">Xác nhận</span>
+</div>
+</div>
+<!-- Form thông tin -->
+<form class="space-y-4">
+<div>
+<label for="fullname" class="block text-sm font-medium mb-1">Họ tên</label>
+<input type="text" id="fullname" placeholder="Nguyễn Văn A" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary">
+</div>
+<div>
+<label for="email" class="block text-sm font-medium mb-1">Email</label>
+<input type="email" id="email" placeholder="example@gmail.com" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary">
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label for="phone" class="block text-sm font-medium mb-1">Số điện thoại</label>
+<input type="tel" id="phone" placeholder="0912 345 678" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary">
+</div>
+<div>
+<label for="phone-confirm" class="block text-sm font-medium mb-1">Nhập lại số điện thoại</label>
+<input type="tel" id="phone-confirm" placeholder="0912 345 678" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label for="province" class="block text-sm font-medium mb-1">Tỉnh/Thành phố</label>
+<div class="relative">
+<select id="province" class="w-full px-4 py-2 border border-gray-300 rounded appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+<option value="">Chọn Tỉnh/Thành phố</option>
+<option value="hanoi">Hà Nội</option>
+<option value="hcm">TP. Hồ Chí Minh</option>
+<option value="danang">Đà Nẵng</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+</div>
+<div>
+<label for="district" class="block text-sm font-medium mb-1">Quận/Huyện</label>
+<div class="relative">
+<select id="district" class="w-full px-4 py-2 border border-gray-300 rounded appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+<option value="">Chọn Quận/Huyện</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+</div>
+</div>
+<div>
+<label for="ward" class="block text-sm font-medium mb-1">Xã/Phường</label>
+<div class="relative">
+<select id="ward" class="w-full px-4 py-2 border border-gray-300 rounded appearance-none focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+<option value="">Chọn Xã/Phường</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</div>
+</div>
+<div>
+<label for="address" class="block text-sm font-medium mb-1">Địa chỉ</label>
+<input type="text" id="address" placeholder="Số nhà, tên đường" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-primary">
+</div>
+
+<a
+  href="payments"
+  class="block text-center w-full bg-primary text-white py-3 rounded !rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap mt-4"
+>
+  Tiếp tục
+</a>
+
+</form>
+</div>
+</div>
+</div>
+<script id="quantity-control">
+document.addEventListener('DOMContentLoaded', function() {
+const quantityContainers = document.querySelectorAll('.flex.items-center.border.rounded-md');
+quantityContainers.forEach(container => {
+const minusBtn = container.querySelector('button:first-child');
+const plusBtn = container.querySelector('button:last-child');
+const input = container.querySelector('input');
+minusBtn.addEventListener('click', function() {
+let value = parseInt(input.value);
+if (value > 1) {
+input.value = value - 1;
+}
+});
+plusBtn.addEventListener('click', function() {
+let value = parseInt(input.value);
+input.value = value + 1;
+});
+input.addEventListener('change', function() {
+if (this.value < 1 || isNaN(this.value)) {
+this.value = 1;
+}
+});
+});
+});
+</script>
+<script id="location-dropdown">
+document.addEventListener('DOMContentLoaded', function() {
+const provinceSelect = document.getElementById('province');
+const districtSelect = document.getElementById('district');
+const wardSelect = document.getElementById('ward');
+provinceSelect.addEventListener('change', function() {
+// Xóa các option cũ
+districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+wardSelect.innerHTML = '<option value="">Chọn Xã/Phường</option>';
+// Thêm các option mới dựa trên tỉnh/thành phố được chọn
+if (this.value === 'hanoi') {
+addOptions(districtSelect, [
+{ value: 'hoankiem', text: 'Hoàn Kiếm' },
+{ value: 'badinh', text: 'Ba Đình' },
+{ value: 'dongda', text: 'Đống Đa' }
+]);
+} else if (this.value === 'hcm') {
+addOptions(districtSelect, [
+{ value: 'district1', text: 'Quận 1' },
+{ value: 'district3', text: 'Quận 3' },
+{ value: 'binhtan', text: 'Bình Tân' }
+]);
+} else if (this.value === 'danang') {
+addOptions(districtSelect, [
+{ value: 'haichau', text: 'Hải Châu' },
+{ value: 'thanhhke', text: 'Thanh Khê' },
+{ value: 'lienchieu', text: 'Liên Chiểu' }
+]);
+}
+});
+districtSelect.addEventListener('change', function() {
+// Xóa các option cũ
+wardSelect.innerHTML = '<option value="">Chọn Xã/Phường</option>';
+// Thêm các option mới dựa trên quận/huyện được chọn
+if (this.value === 'hoankiem') {
+addOptions(wardSelect, [
+{ value: 'hangbac', text: 'Hàng Bạc' },
+{ value: 'hangbo', text: 'Hàng Bồ' },
+{ value: 'hangdao', text: 'Hàng Đào' }
+]);
+} else if (this.value === 'district1') {
+addOptions(wardSelect, [
+{ value: 'bennghe', text: 'Bến Nghé' },
+{ value: 'benthanhward', text: 'Bến Thành' },
+{ value: 'dakao', text: 'Đa Kao' }
+]);
+}
+// Thêm các trường hợp khác tương tự
+});
+function addOptions(selectElement, options) {
+options.forEach(option => {
+const optionElement = document.createElement('option');
+optionElement.value = option.value;
+optionElement.textContent = option.text;
+selectElement.appendChild(optionElement);
+});
+}
+});
+</script>
+</body>
+</html>

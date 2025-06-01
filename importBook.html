@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phiếu Nhập Sách</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Roboto', sans-serif;
+background-color: #f8f9fa;
+}
+.table-row:nth-child(even) {
+background-color: #f9fafb;
+}
+</style>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#4b5563',secondary:'#F5F1EC'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+</head>
+<body class="bg-[#F5F1EC] min-h-screen flex items-center justify-center max-full">
+<div class="bg-white shadow-md rounded-lg w-full max-w-full ">
+<!-- Header -->
+ <!-- Header -->
+  <header class="bg-primary py-4">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="/" class="flex items-center">
+        <span class="text-2xl font-['Pacifico'] text-gray-800">Readify</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="/" class="text-gray-800 hover:text-gray-600">Trang chủ</a>
+        <a href="searchbooks" class="text-gray-800 hover:text-gray-600">Sách</a>
+        <a href="payment" class="text-gray-800 hover:text-gray-600">Xu hướng</a>
+        <a href="importbook" class="text-gray-800 hover:text-gray-600">Về chúng tôi</a>
+        <a href="login" class="text-gray-800 hover:text-gray-600">Đăng nhập</a>
+        <!-- <button onclick="openRegisterModal()" class="bg-white text-gray-800 px-4 py-2 !rounded-button whitespace-nowrap">Tạo tài khoản</button> -->
+        <a href="register" class="bg-white text-gray-800 px-4 py-2 !rounded-button whitespace-nowrap">Tạo tài khoản</a>
+      </nav>
+      <div class="md:hidden flex items-center">
+        <button class="text-gray-800">
+          <i class="ri-menu-line ri-lg"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+<div class="bg-[#F5F1EC] p-6 rounded-t-lg flex justify-between items-center border-b border-gray-200">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm">
+<i class="ri-book-2-line text-gray-800 ri-xl"></i>
+</div>
+<div>
+<h1 class="text-2xl font-bold text-gray-800 tracking-wide">PHIẾU NHẬP SÁCH</h1>
+<p class="text-sm text-gray-700">Nhà Sách Trí Tuệ</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm">Số phiếu: <span class="font-medium">NP-062023-054</span></p>
+<p class="text-sm">Ngày: <span class="font-medium">23/06/2025</span></p>
+</div>
+</div>
+<!-- Info Section -->
+<div class="p-6 grid grid-cols-2 gap-6">
+<div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+<h2 class="text-lg font-semibold mb-3 text-gray-700 border-b pb-2">Thông tin người nhập</h2>
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-user-line"></i>
+</div>
+<p><span class="text-gray-600">Nhân viên:</span> <span class="font-medium">Nguyễn Thị Minh Tâm</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-id-card-line"></i>
+</div>
+<p><span class="text-gray-600">Mã NV:</span> <span class="font-medium">NV-2023-089</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-mail-line"></i>
+</div>
+<p><span class="text-gray-600">Liên hệ:</span> <span class="font-medium">minhtam@trimail.vn</span></p>
+</div>
+<div class="flex items-center gap-2 mt-3">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-time-line"></i>
+</div>
+<p><span class="text-gray-600">Thời gian nhập:</span> <span class="font-medium">09:30 - 23/06/2025</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-store-line"></i>
+</div>
+<p><span class="text-gray-600">Kho nhập:</span> <span class="font-medium">Kho sách chính - Chi nhánh Quận 1</span></p>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col justify-between">
+<div>
+<h2 class="text-lg font-semibold mb-3 text-gray-700 border-b pb-2">Thông tin phiếu</h2>
+<div class="space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-file-list-line"></i>
+</div>
+<p><span class="text-gray-600">Loại phiếu:</span> <span class="font-medium">Nhập sách mới</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-truck-line"></i>
+</div>
+<p><span class="text-gray-600">Nhà cung cấp:</span> <span class="font-medium">NXB Trẻ</span></p>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 flex items-center justify-center text-gray-500">
+<i class="ri-file-paper-2-line"></i>
+</div>
+<p><span class="text-gray-600">Số đơn hàng:</span> <span class="font-medium">DH-062025-123</span></p>
+</div>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<div class="w-24 h-24 border border-gray-300 rounded flex items-center justify-center">
+<i class="ri-qr-code-line ri-3x text-gray-400"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="px-6 pb-6">
+<div class="overflow-hidden border border-gray-200 rounded-lg">
+<table class="min-w-full divide-y divide-gray-200">
+<thead>
+<tr class="bg-gray-100">
+<th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-12">STT</th>
+<th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tên sách</th>
+<th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Thể loại</th>
+<th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tác giả</th>
+<th class="px-4 py-3 text-right text-sm font-semibold text-gray-700 w-24">Số lượng</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200">
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">1</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Cây Cầm Ngọt Của Tôi</td>
+<td class="px-4 py-3 text-sm text-gray-700">Tiểu thuyết</td>
+<td class="px-4 py-3 text-sm text-gray-700">José Mauro de Vasconcelos</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">25</td>
+</tr>
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">2</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Nhà Giả Kim</td>
+<td class="px-4 py-3 text-sm text-gray-700">Tiểu thuyết</td>
+<td class="px-4 py-3 text-sm text-gray-700">Paulo Coelho</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">30</td>
+</tr>
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">3</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Tôi Thấy Hoa Vàng Trên Cỏ Xanh</td>
+<td class="px-4 py-3 text-sm text-gray-700">Văn học Việt Nam</td>
+<td class="px-4 py-3 text-sm text-gray-700">Nguyễn Nhật Ánh</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">45</td>
+</tr>
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">4</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Đắm Nghĩ Lạc</td>
+<td class="px-4 py-3 text-sm text-gray-700">Kỹ năng sống</td>
+<td class="px-4 py-3 text-sm text-gray-700">David J. Schwartz</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">15</td>
+</tr>
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">5</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Đắc Nhân Tâm</td>
+<td class="px-4 py-3 text-sm text-gray-700">Tâm lý - Kỹ năng sống</td>
+<td class="px-4 py-3 text-sm text-gray-700">Dale Carnegie</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">35</td>
+</tr>
+<tr class="table-row">
+<td class="px-4 py-3 text-sm text-gray-700">6</td>
+<td class="px-4 py-3 text-sm text-gray-900 font-medium">Tuổi Trẻ Đáng Giá Bao Nhiêu</td>
+<td class="px-4 py-3 text-sm text-gray-700">Tản văn</td>
+<td class="px-4 py-3 text-sm text-gray-700">Rosie Nguyễn</td>
+<td class="px-4 py-3 text-sm text-gray-700 text-right font-medium">20</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Summary Section -->
+<div class="mt-6 bg-gray-50 rounded-lg border border-gray-200 p-4">
+<div class="flex justify-between items-center mb-2">
+<span class="text-gray-600 font-medium">Tổng số đầu sách:</span>
+<span class="font-semibold text-gray-800">6</span>
+</div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-gray-600 font-medium">Tổng số lượng:</span>
+<span class="font-semibold text-gray-800">165</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-gray-200">
+<span class="text-gray-600 font-medium">Trạng thái:</span>
+<span class="font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm">Đã nhập kho</span>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-6 text-sm text-gray-500 italic">
+<p>Ghi chú: Vui lòng kiểm tra kỹ số lượng và tình trạng sách trước khi nhập kho.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

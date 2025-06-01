@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Readify - Cửa hàng sách trực tuyến</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3B82F6',secondary:'#1E40AF'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+background-color: #F5F1EC;
+font-family: 'Inter', sans-serif;
+}
+.search-input:focus {
+outline: none;
+}
+.category-checkbox:checked + span {
+color: #3B82F6;
+font-weight: 500;
+}
+.category-checkbox:checked + span:before {
+background-color: #3B82F6;
+border-color: #3B82F6;
+}
+.custom-checkbox {
+position: relative;
+padding-left: 28px;
+cursor: pointer;
+user-select: none;
+}
+.custom-checkbox:before {
+content: "";
+position: absolute;
+left: 0;
+top: 50%;
+transform: translateY(-50%);
+width: 18px;
+height: 18px;
+border: 2px solid #CBD5E1;
+border-radius: 4px;
+transition: all 0.2s;
+}
+.category-checkbox:checked + .custom-checkbox:before {
+background-color: #3B82F6;
+border-color: #3B82F6;
+}
+.category-checkbox:checked + .custom-checkbox:after {
+content: "";
+position: absolute;
+left: 6px;
+top: 9px;
+width: 6px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: translateY(-50%) rotate(45deg);
+}
+.book-card {
+transition: transform 0.3s ease;
+}
+.book-card:hover {
+transform: translateY(-5px);
+}
+</style>
+</head>
+<body>
+<header class="bg-white shadow">
+<div class="container mx-auto px-4 py-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<a href="#" class="flex items-center">
+<!-- <div class="w-10 h-10 flex items-center justify-center text-primary mr-2">
+<i class="ri-book-open-line ri-2x"></i>
+</div> -->
+<span class="text-2xl font-['Pacifico'] text-gray-800 mr-12">
+            Readify</span>
+</a>
+</div>
+<div class="flex-1 mx-12">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="ri-search-line text-gray-400"></i>
+</div>
+<input type="text" class="search-input w-full pl-10 pr-4 py-2 border border-gray-200 rounded-full bg-gray-50 text-sm" placeholder="Tìm kiếm sách, tác giả, chủ đề và nhiều hơn nữa...">
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-heart-line ri-lg"></i>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-notification-line ri-lg"></i>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+<i class="ri-shopping-cart-line ri-lg"></i>
+</button>
+<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+<i class="ri-user-line text-gray-600"></i>
+</div>
+</div>
+</div>
+</div>
+</header>
+<nav class="bg-white border-b border-gray-100">
+<div class="container mx-auto px-4">
+<div class="flex items-center space-x-8 py-3">
+<a href="#" class="text-primary font-medium">Trinh Thám</a>
+<a href="#" class="text-gray-700 hover:text-primary">Tình Cảm</a>
+<a href="#" class="text-gray-700 hover:text-primary">Tiểu Thuyết</a>
+<a href="#" class="text-gray-700 hover:text-primary">Lịch Sử</a>
+<a href="#" class="text-gray-700 hover:text-primary">Khoa Học Viễn Tưởng</a>
+<a href="#" class="text-gray-700 hover:text-primary">Kỳ Ảo</a>
+<a href="#" class="text-gray-700 hover:text-primary">Xem Thêm</a>
+</div>
+</div>
+</nav>
+<main class="container mx-auto px-4 py-8">
+<section class="mb-12">
+<div class="grid grid-cols-3 gap-6">
+<div class="relative rounded-lg overflow-hidden shadow-md bg-gray-800 flex">
+<div class="p-6 flex flex-col justify-center z-10 w-1/2">
+<h2 class="text-xl font-bold text-white mb-2">Sách Nổi Bật</h2>
+<p class="text-gray-300 text-sm mb-4">Khám phá những câu chuyện hấp dẫn và ly kỳ về các chiến binh Viking dũng mãnh. Một hành trình phiêu lưu đầy rẫy những trận chiến khốc liệt và những bí ẩn chưa được khám phá.</p>
+<div class="text-xs text-gray-400 mb-4">Lịch Sử - Phiêu Lưu</div>
+<button class="bg-blue-500 text-white px-4 py-2 rounded-button whitespace-nowrap w-max">Xem Thêm</button>
+</div>
+<div class="absolute top-0 right-0 w-1/2 h-full">
+<img src="https://readdy.ai/api/search-image?query=viking%20warrior%20with%20axe%20and%20shield%2C%20dramatic%20lighting%2C%20cinematic%2C%20historical%2C%20book%20cover%20art%20style%2C%20dark%20atmosphere%2C%20professional%20book%20cover&width=400&height=600&seq=1&orientation=portrait" alt="Viking" class="w-full h-full object-cover object-top">
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden shadow-md bg-indigo-800 flex">
+<div class="p-6 flex flex-col justify-center z-10 w-1/2">
+<h2 class="text-xl font-bold text-white mb-2">Trinh Thám</h2>
+<p class="text-gray-300 text-sm mb-4">Bước vào thế giới của những vụ án bí ẩn cùng thám tử Sherlock Holmes. Những câu chuyện điều tra gay cấn và những phá án tài tình sẽ khiến bạn không thể rời mắt.</p>
+<div class="text-xs text-gray-400 mb-4">Trinh Thám - Phá Án</div>
+<button class="bg-indigo-500 text-white px-4 py-2 rounded-button whitespace-nowrap w-max">Xem Thêm</button>
+</div>
+<div class="absolute top-0 right-0 w-1/2 h-full">
+<img src="https://readdy.ai/api/search-image?query=sherlock%20holmes%20with%20pipe%20and%20magnifying%20glass%2C%20foggy%20london%20background%2C%20professional%20book%20cover%20art%20style%2C%20detective%20mystery%20atmosphere&width=400&height=600&seq=2&orientation=portrait" alt="Sherlock Holmes" class="w-full h-full object-cover object-top">
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden shadow-md bg-amber-700 flex">
+<div class="p-6 flex flex-col justify-center z-10 w-1/2">
+<h2 class="text-xl font-bold text-white mb-2">Sách Mới</h2>
+<p class="text-gray-300 text-sm mb-4">Đắm chìm trong những trang sách mới nhất với những câu chuyện đầy cảm xúc. Khám phá những tác phẩm độc đáo và hấp dẫn từ các tác giả tài năng.</p>
+<div class="text-xs text-gray-400 mb-4">Văn Học - Tình Cảm</div>
+<button class="bg-amber-500 text-white px-4 py-2 rounded-button whitespace-nowrap w-max">Xem Thêm</button>
+</div>
+<div class="absolute top-0 right-0 w-1/2 h-full">
+<img src="https://readdy.ai/api/search-image?query=vintage%20sherlock%20holmes%20book%20cover%2C%20yellow%20background%2C%20professional%20book%20cover%20art%20style%2C%20retro%20detective%20theme&width=400&height=600&seq=3&orientation=portrait" alt="Sherlock Holmes" class="w-full h-full object-cover object-top">
+</div>
+</div>
+</div>
+</section>
+<section class="flex gap-8">
+<div class="w-64 flex-shrink-0">
+<div class="bg-white rounded-lg p-5 shadow-sm">
+<h3 class="font-medium text-gray-800 mb-4">Thể Loại Sách</h3>
+<div class="space-y-3">
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Trinh Thám</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Tiểu Thuyết</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Tuổi Teen</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Tiểu Sử</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Tôn Giáo</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Kiến Thức</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Thiếu Nhi</span>
+</label>
+</div>
+<h3 class="font-medium text-gray-800 mt-8 mb-4">Thể Loại Sách Mới</h3>
+<div class="space-y-3">
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Lịch Sử</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Tiểu Thuyết Mới</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Sách Tuổi Teen</span>
+</label>
+<label class="flex items-center">
+<input type="checkbox" class="category-checkbox hidden">
+<span class="custom-checkbox text-gray-700 text-sm">Thơ Ca</span>
+</label>
+</div>
+</div>
+</div>
+<div class="flex-1">
+<div class="grid grid-cols-5 gap-6">
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=1984%20book%20cover%2C%20eye%20design%2C%20red%20and%20black%2C%20minimalist%20style%2C%20professional%20book%20cover%20art&width=240&height=360&seq=4&orientation=portrait" alt="1984 by George Orwell" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=animal%20farm%20book%20cover%2C%20geometric%20design%2C%20blue%20and%20white%2C%20professional%20book%20cover%20art%2C%20minimalist%20style&width=240&height=360&seq=5&orientation=portrait" alt="Animal Farm by George Orwell" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=sherlock%20holmes%20book%20cover%2C%20red%20background%2C%20silhouette%20design%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=6&orientation=portrait" alt="Sherlock Holmes" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=sherlock%20holmes%20book%20cover%2C%20elegant%20design%2C%20vintage%20style%2C%20professional%20book%20cover%20art&width=240&height=360&seq=7&orientation=portrait" alt="Sherlock Holmes" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=sherlock%20holmes%20silhouette%20with%20pipe%2C%20modern%20book%20cover%20design%2C%20teal%20background%2C%20professional%20book%20cover%20art&width=240&height=360&seq=8&orientation=portrait" alt="Sherlock Holmes" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=sherlock%20holmes%20book%20cover%2C%20vintage%20design%2C%20red%20background%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=9&orientation=portrait" alt="Sherlock Holmes" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=harry%20potter%20book%20cover%2C%20magical%20castle%2C%20blue%20tones%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=10&orientation=portrait" alt="Harry Potter" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=harry%20potter%20book%20cover%2C%20magical%20items%2C%20blue%20background%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=11&orientation=portrait" alt="Harry Potter" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=harry%20potter%20book%20cover%2C%20half%20blood%20prince%2C%20dark%20blue%20background%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=12&orientation=portrait" alt="Harry Potter" class="w-full h-64 object-cover object-top">
+</div>
+<div class="book-card bg-white rounded-lg overflow-hidden shadow-sm">
+<img src="https://readdy.ai/api/search-image?query=fantasy%20book%20cover%2C%20green%20background%2C%20magical%20forest%2C%20professional%20book%20cover%20art%20style&width=240&height=360&seq=13&orientation=portrait" alt="Fantasy Book" class="w-full h-64 object-cover object-top">
+</div>
+</div>
+</div>
+</section>
+</main>
+<script id="categoryCheckboxes">
+document.addEventListener('DOMContentLoaded', function() {
+const checkboxes = document.querySelectorAll('.category-checkbox');
+checkboxes.forEach(checkbox => {
+checkbox.addEventListener('change', function() {
+// You can add filtering logic here
+console.log('Category filter changed:', this.nextElementSibling.textContent, 'Checked:', this.checked);
+});
+});
+});
+</script>
+<script id="bookCardInteractions">
+document.addEventListener('DOMContentLoaded', function() {
+const bookCards = document.querySelectorAll('.book-card');
+bookCards.forEach(card => {
+card.addEventListener('click', function() {
+console.log('Book clicked:', this.querySelector('img').alt);
+// Navigate to book details page
+});
+});
+});
+</script>
+</body>
+</html>

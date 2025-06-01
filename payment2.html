@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt hàng thành công</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#1e40af", secondary: "#4b5563" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+      background-color: #F5F1EC;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-lg w-full mx-4">
+      <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+        <div
+          class="w-28 h-28 mx-auto mb-8 rounded-full bg-green-50 flex items-center justify-center"
+        >
+          <i class="ri-check-line text-6xl text-green-500"></i>
+        </div>
+        <h1 class="text-3xl font-bold mb-4 text-gray-900">
+          Đặt hàng thành công!
+        </h1>
+        <p class="text-gray-600 text-lg mb-3">Cảm ơn bạn đã đặt hàng.</p>
+        <p class="text-gray-600 text-lg mb-6">
+          Đơn hàng sẽ nhanh chóng được giao tới cho bạn.
+        </p>
+        <p class="text-gray-500 mb-8 font-medium">Mã đơn hàng: #ORD123456</p>
+        <button
+          onclick="window.location.href='/'"
+
+          class="bg-primary text-white py-3.5 px-10 rounded-button text-lg font-medium hover:bg-primary/90 transition-colors duration-200 whitespace-nowrap"
+        >
+          Quay về trang chủ
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
