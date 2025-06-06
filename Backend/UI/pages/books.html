@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tất cả sách | Readify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind & Remixicon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="stylesheet" href="./assets/css/home.css">
+  <script src="./assets/js/home.js"></script>
+  <script src="./assets/js/callHeaderFooter.js"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#f5f5dc',
+            secondary: '#e6e6e6',
+            primarynavy: '#2d5aa0',
+            light : '#f8fafc',
+
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <main class="container mx-auto px-2 sm:px-4 py-8">
+    <div class="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Tất cả sách</h1>
+        <p class="text-gray-600 text-lg">Khám phá kho sách phong phú, đa dạng thể loại và tác giả nổi bật.</p>
+      </div>
+      <div class="flex gap-2">
+        <button class="bg-white border border-gray-300 hover:bg-primary hover:text-white text-gray-800 px-4 py-2 rounded-lg font-medium flex items-center gap-2 shadow-sm transition">
+          <i class="ri-layout-grid-line text-xl"></i> Lưới
+        </button>
+        <button class="bg-white border border-gray-300 hover:bg-primary hover:text-white text-gray-800 px-4 py-2 rounded-lg font-medium flex items-center gap-2 shadow-sm transition">
+          <i class="ri-list-check text-xl"></i> Danh sách
+        </button>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+      <!-- Book Card 1 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20with%20dark%20blue%20background%20and%20pink%20text%20saying%20Such%20a%20Fun%20Age%2C%20literary%20fiction%20book%20cover%20with%20award%20medal&width=400&height=600&seq=1&orientation=portrait" alt="Such a Fun Age" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Tiểu sử</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Một Thời Đại Vui Vẻ</h3>
+          <p class="text-gray-500 text-sm mb-3">Kiley Reid</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">329.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 2 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20Treasure%20Island%20by%20Robert%20Louis%20Stevenson%2C%20classic%20adventure%20novel%20with%20pirate%20ship%20illustration&width=400&height=600&seq=2&orientation=portrait" alt="Treasure Island" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Phiêu lưu</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Đảo Châu Báu</h3>
+          <p class="text-gray-500 text-sm mb-3">Robert Louis Stevenson</p>
+          <div class="flex justify-between items-center mt-auto">
+            <div>
+              <span class="font-bold text-primary text-lg">375.000₫</span>
+              <span class="text-sm text-gray-400 line-through ml-2">450.000₫</span>
+            </div>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 3 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20Atomic%20Habits%20by%20James%20Clear%2C%20bestselling%20self-help%20book%20with%20simple%20geometric%20design%20and%20orange%20color%20scheme&width=400&height=600&seq=3&orientation=portrait" alt="Atomic Habits" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Phát triển bản thân</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Thói Quen Nguyên Tử</h3>
+          <p class="text-gray-500 text-sm mb-3">James Clear</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">289.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 4 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20Reminders%20of%20Him%20by%20Colleen%20Hoover%2C%20contemporary%20romance%20novel%20with%20light%20blue%20background%20and%20purple%20typography&width=400&height=600&seq=4&orientation=portrait" alt="Reminders of Him" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Tiểu thuyết</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Những Kỷ Niệm Về Anh</h3>
+          <p class="text-gray-500 text-sm mb-3">Colleen Hoover</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">299.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 5 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20A%20Flicker%20in%20the%20Dark%20by%20Stacy%20Willingham%2C%20psychological%20thriller%20with%20dark%20background%20and%20minimal%20text%20design&width=400&height=600&seq=5&orientation=portrait" alt="A Flicker in the Dark" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Bí ẩn & Kinh dị</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Ánh Sáng Trong Bóng Tối</h3>
+          <p class="text-gray-500 text-sm mb-3">Stacy Willingham</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">315.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 6 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20The%20Subtle%20Art%20of%20Not%20Giving%20a%20F%2Ack%20by%20Mark%20Manson%2C%20self-help%20book%20with%20bright%20orange%20background%20and%20bold%20typography&width=400&height=600&seq=6&orientation=portrait" alt="The Subtle Art of Not Giving a F*ck" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Phát triển bản thân</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Nghệ Thuật Tinh Tế Của Việc Đếch Quan Tâm</h3>
+          <p class="text-gray-500 text-sm mb-3">Mark Manson</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">259.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 7 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20And%20There%20Was%20Light:%20Abraham%20Lincoln%20biography%20by%20Jon%20Meacham%20with%20professional%20design%20and%20historical%20portrait&width=400&height=600&seq=7&orientation=portrait" alt="And There Was Light" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Tiểu sử</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Và Ánh Sáng Đã Đến: Abraham Lincoln</h3>
+          <p class="text-gray-500 text-sm mb-3">Jon Meacham</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">420.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 8 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20One%20Simple%20One-Pan%20Wonders%20by%20Jamie%20Oliver%2C%20cookbook%20with%20bright%20turquoise%20background%20and%20food%20photography&width=400&height=600&seq=8&orientation=portrait" alt="One Simple One-Pan Wonders" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Sách dạy nấu ăn</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Món Ngon Đơn Giản Chỉ Với Một Chảo</h3>
+          <p class="text-gray-500 text-sm mb-3">Jamie Oliver</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">550.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+      <!-- Book Card 9 -->
+      <div class="book-card bg-white border border-gray-100 rounded-2xl shadow-md overflow-hidden flex flex-col h-full transition-all duration-200">
+        <div class="relative h-72 w-full flex-shrink-0 group">
+          <img src="https://readdy.ai/api/search-image?query=Book%20cover%20of%20No%20Plan%20B%20by%20Lee%20Child%20and%20Andrew%20Child%2C%20thriller%20novel%20with%20minimalist%20design%20and%20bold%20typography&width=400&height=600&seq=9&orientation=portrait" alt="No Plan B" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+          <button class="star-btn absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white text-gray-400 rounded-full shadow hover:bg-accent hover:text-white transition">
+            <i class="ri-star-line text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="text-xs uppercase tracking-wide text-primary font-semibold mb-1">Bí ẩn & Kinh dị</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2">Không Có Kế Hoạch B</h3>
+          <p class="text-gray-500 text-sm mb-3">Lee Child & Andrew Child</p>
+          <div class="flex justify-between items-center mt-auto">
+            <span class="font-bold text-primary text-lg">315.000₫</span>
+            <button class="add-cart bg-gray-100 text-primary px-4 py-2 rounded-lg font-medium whitespace-nowrap shadow hover:bg-primary hover:text-white transition">Thêm vào giỏ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="flex justify-center mt-12">
+      <nav class="inline-flex rounded-lg shadow-sm overflow-hidden border border-gray-200 bg-white" aria-label="Pagination">
+        <a href="#" class="px-4 py-2 text-gray-700 hover:bg-primary hover:text-white transition">1</a>
+        <a href="#" class="px-4 py-2 text-gray-700 hover:bg-primary hover:text-white transition">2</a>
+        <a href="#" class="px-4 py-2 text-gray-700 hover:bg-primary hover:text-white transition">3</a>
+        <span class="px-4 py-2 text-gray-400">...</span>
+        <a href="#" class="px-4 py-2 text-gray-700 hover:bg-primary hover:text-white transition">20</a>
+      </nav>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+</body>
+</html>
