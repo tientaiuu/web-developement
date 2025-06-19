@@ -1,0 +1,254 @@
+/* Add font files for Lora */
+@font-face {
+  font-family: 'Lora';
+  src: url('fonts/lora.woff2') format('woff2'),
+       url('fonts/lora.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Add font files for Playfair Display */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('fonts/playfair-display.woff2') format('woff2'),
+       url('fonts/playfair-display.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Add font files for Pacifico */
+@font-face {
+  font-family: 'Pacifico';
+  src: url('fonts/pacifico.woff2') format('woff2'),
+       url('fonts/pacifico.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+:root {
+  /* Font families */
+  --font-family-inter: 'Inter', sans-serif;
+  --font-family-roboto: 'Roboto', sans-serif;
+  --font-family-lora: 'Lora', sans-serif;
+  --font-family-playfair-display: 'Playfair Display', sans-serif;
+  --font-family-montserrat: 'Montserrat', sans-serif;
+  --font-family-pacifico: 'Pacifico', sans-serif;
+
+  /* Colors */
+  --athens-gray: rgba(226, 232, 240, 1);
+  --athens-gray-light: rgba(249, 250, 251, 1);
+  --athens-gray-warm: rgba(249, 249, 240, 1);
+  --text-primary: rgba(26, 54, 93, 1);
+  --azure-radiance: rgba(0, 117, 255, 1);
+  --beige: rgba(226, 232, 240, 1);
+  --biscay: rgba(26, 54, 93, 1);
+  --black: rgba(0, 0, 0, 1);
+  --boulder: rgba(107, 114, 128, 1);
+  --catskill-white: rgba(249, 250, 251, 1);
+  --ebony: rgba(17, 24, 39, 1);
+  --ebony-clay: rgba(31, 41, 55, 1);
+  --feta: rgba(250, 249, 247, 1);
+  --gray-chateau: rgba(156, 163, 175, 1);
+  --mine-shaft: rgba(49, 49, 49, 1); 
+  --mischka: rgba(209, 213, 219, 1);
+  --mystic: rgba(226, 232, 240, 1);
+  --old-gold: rgba(212, 175, 55, 1);
+  --old-gold-10: rgba(212, 175, 55, 0.1);
+  --old-gold-8: rgba(212, 175, 55, 0.08);
+  --oxford-blue: rgba(26, 54, 93, 1); 
+  --pale-sky: rgba(107, 114, 128, 1);
+  --river-bed: rgba(74, 85, 104, 1); 
+  --salem: rgba(22, 163, 74, 1);
+  --silver: rgba(187, 187, 187, 1);
+  --slate-gray: rgba(113, 128, 150, 1);
+  --spring-wood: rgba(245, 241, 236, 1);
+  --st-tropaz: rgba(45, 90, 160, 1);
+  --st-tropaz-10: rgba(45, 90, 160, 0.1);
+  --st-tropaz-8: rgba(45, 90, 160, 0.08);
+  --tree-poppy: rgba(247, 147, 30, 1);
+  --white: rgba(255, 255, 255, 1);
+  --white-10: rgba(255, 255, 255, 0.1);
+  --white-95: rgba(255, 255, 255, 0.95);
+  --white-ecru: rgba(255, 255, 255, 1);
+  --white-spring: rgba(255, 255, 255, 1);
+
+  --apple-black-16: rgba(0, 0, 0, 0.16);
+  --apple-black-40: rgba(0, 0, 0, 0.4);
+  --apple-black-42: rgba(0, 0, 0, 0.42);
+  --apple-black-48: rgba(0, 0, 0, 0.48);
+  --apple-black-56: rgba(0, 0, 0, 0.56);
+  --apple-black-72: rgba(0, 0, 0, 0.72);
+  --apple-black-80: rgba(0, 0, 0, 0.8);
+  --apple-black-88: rgba(0, 0, 0, 0.88);
+  --apple-azure-radiance: rgba(0, 119, 237, 1);
+  --apple-french-gray: rgba(200, 200, 206, 1);
+  --apple-link-water: rgba(199, 230, 241, 1);
+  --apple-mid-gray: rgba(110, 110, 115, 1);
+  --apple-mine-shaft: rgba(38, 38, 38, 1);
+  --apple-mischka: rgba(210, 210, 215, 1);
+  --apple-dodger-blue: rgba(41, 151, 255, 1);
+  --apple-orchid: rgba(222, 91, 192, 1);
+  --apple-science-blue: rgba(0, 102, 204, 1);
+  --apple-shark: rgba(29, 29, 31, 1);
+  --apple-white-80: rgba(255, 255, 255, 0.8);
+
+  --text-primary: rgba(26, 54, 93, 1);    
+  --text-secondary: rgba(39, 77, 118, 1);
+  --text-black: rgba(0, 0, 0, 1);
+  --text-white: rgba(255, 255, 255, 1);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-black {
+  color: var(--text-black);
+}
+
+.text-rgb-39-77-118 {
+  color: var(--text-rgb-39-77-118);
+}
+
+.text-white {
+  color: var(--text-white);
+}
+
+
+/* CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.text-3 {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  font-family: var(--font-family-playfair-display);
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 67.19999694824219px;
+  text-decoration: none;
+  text-transform: none;
+  color: var(--text-rgb-26-54-93);
+  margin-bottom: 20px;
+}
+
+.text-4 {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  font-family: var(--font-family-montserrat);
+  font-weight: normal;
+  font-size: 20px;
+  letter-spacing: 2.5%;
+  line-height: 147.89998531341553%;
+  text-decoration: none;
+  text-transform: none;
+  color: var(--text-black);
+  margin-bottom: 12px;
+}
+
+.vector-1-5 {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  border: 0.5854490399360657px solid rgba(139, 139, 139, 1);
+  border: none;
+  outline: none;
+}
+
+.text-6 {
+  font-family: var(--font-family-montserrat);
+  font-weight: normal;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  color: var(--text-black);
+  margin-bottom: 24px;
+}
+
+.semantic-heading-4 {
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  font-family: var(--font-family-montserrat);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  text-decoration: none;
+  text-transform: none;
+  color: var(--text-white);
+}
+
+.component-3-7 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px 12px 24px;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  background-color: rgba(45, 90, 160, 1);
+  border-radius: 8px;
+}
+
+.p404-2 {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 1);
+  min-width: 300px;
+}
+
+
+.node-9 {
+  flex: 1;
+  max-width: 600px;
+  height: auto;
+}
+
+.p404_page-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 40px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+}
+
+@media (max-width: 1440px) {
+  .p404_page-1 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .p404_page-1 {
+    flex-direction: column;
+    align-items: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
