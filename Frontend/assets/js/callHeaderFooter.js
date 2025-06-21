@@ -1,13 +1,20 @@
-// Đảm bảo chỉ gắn 1 lần event listener cho document
+// Global click handler to close panels when clicking outside
 document.addEventListener('click', function(e) {
     const userPanel = document.getElementById('userPanel');
     const userBtn = document.getElementById('userBtn');
+    const userInfo = document.getElementById('userInfo');
+    const userInfoBtn = document.getElementById('userInfoBtn');
+    
+    // Check if clicking outside user panel and not on user buttons
     if (
       userPanel &&
       !userPanel.classList.contains('hidden') &&
       !userPanel.contains(e.target) &&
-      (!userBtn || !userBtn.contains(e.target)) 
+      (!userBtn || !userBtn.contains(e.target)) &&
+      (!userInfo || !userInfo.contains(e.target)) &&
+      (!userInfoBtn || !userInfoBtn.contains(e.target))
     ) {
+      console.log('🖱️ [callHeaderFooter] Clicked outside user panel, closing...');
       closeUserPanel();
     }
   });
@@ -39,22 +46,125 @@ document.addEventListener('click', function(e) {
 
     if (!userBtn || !userPanel || !closeUserPanelBtn) return;
 
-    userBtn.onclick = openUserPanel;
-    closeUserPanelBtn.onclick = closeUserPanel;
+    userBtn.onclick = function(e) {
+      e.stopPropagation(); // Prevent event bubbling
+      console.log('🖱️ [callHeaderFooter] User button clicked');
+      openUserPanel();
+    };
+    
+    closeUserPanelBtn.onclick = function(e) {
+      e.stopPropagation();
+      console.log('🖱️ [callHeaderFooter] Close button clicked');
+      closeUserPanel();
+    };
 
-    // Đóng panel khi click ra ngoài panel
-    document.addEventListener('mousedown', function(e) {
-      if (
-        userPanel &&
-        !userPanel.classList.contains('hidden') &&
-        !userPanel.classList.contains('translate-x-full') &&
-        !userPanel.contains(e.target) &&
-        (!userBtn || !userBtn.contains(e.target))
-      ) {
-        closeUserPanel();
-      }
-    });
+    // Initialize auth state after header is loaded
+    setTimeout(() => {
+      updateHeaderAuthState();
+    }, 100);
   }
+
+  // Auth state management for header
+  function updateHeaderAuthState() {
+    console.log('🔄 [callHeaderFooter] Updating header auth state...');
+    
+    const userBtn = document.getElementById('userBtn');
+    const userInfo = document.getElementById('userInfo');
+    const guestActions = document.getElementById('guestActions');
+    const userActions = document.getElementById('userActions');
+    const userName = document.getElementById('userName');
+    const headerUserName = document.getElementById('headerUserName');
+    const userInfoBtn = document.getElementById('userInfoBtn');
+    
+    if (typeof window.AuthManager !== 'undefined' && window.AuthManager.isAuthenticated()) {
+      const user = window.AuthManager.getUser();
+      console.log('👤 [callHeaderFooter] User authenticated:', user);
+      
+      if (user) {
+        // Hide guest button, show user info in header
+        if (userBtn) userBtn.classList.add('hidden');
+        if (userInfo) userInfo.classList.remove('hidden');
+        
+        // Update user names
+        const displayName = user.name || user.username || 'User';
+        if (userName) userName.textContent = displayName;
+        if (headerUserName) headerUserName.textContent = displayName;
+        
+        // Update panel actions
+        if (guestActions) guestActions.classList.add('hidden');
+        if (userActions) userActions.classList.remove('hidden');
+        
+        // Add click handler for user info
+        if (userInfo && !userInfo._clickHandlerAdded) {
+          userInfo.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event bubbling
+            console.log('🖱️ [callHeaderFooter] User info clicked');
+            openUserPanel();
+          });
+          userInfo._clickHandlerAdded = true;
+        }
+        if (userInfoBtn && !userInfoBtn._clickHandlerAdded) {
+          userInfoBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event bubbling  
+            console.log('🖱️ [callHeaderFooter] User info button clicked');
+            openUserPanel();
+          });
+          userInfoBtn._clickHandlerAdded = true;
+        }
+        
+        console.log('✅ [callHeaderFooter] Header updated for authenticated user:', displayName);
+      }
+    } else {
+      console.log('🚫 [callHeaderFooter] User not authenticated, showing guest state');
+      
+      // Show guest button, hide user info
+      if (userBtn) userBtn.classList.remove('hidden');
+      if (userInfo) userInfo.classList.add('hidden');
+      
+      // Show guest actions in panel
+      if (guestActions) guestActions.classList.remove('hidden');
+      if (userActions) userActions.classList.add('hidden');
+    }
+  }
+
+  // Handle logout button
+  function handleLogout() {
+    console.log('🚪 [callHeaderFooter] Logout button clicked');
+    
+    if (typeof window.AuthManager !== 'undefined') {
+      // Close user panel first
+      closeUserPanel();
+      
+      window.AuthManager.logout();
+      
+      // Show success message
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[10000] flex items-center space-x-2';
+      messageDiv.innerHTML = `
+        <i class="ri-check-circle-line text-xl"></i>
+        <span>Đăng xuất thành công!</span>
+      `;
+      document.body.appendChild(messageDiv);
+      
+      // Remove message after 3 seconds
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.remove();
+        }
+      }, 3000);
+      
+      // Update header state
+      updateHeaderAuthState();
+      
+      // Redirect to home page
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
+    }
+  }
+
+  // Make functions globally available
+  window.updateHeaderAuthState = updateHeaderAuthState;
 
   function openCartPanel() {
     const cartPanel = document.getElementById('cartPanel');
@@ -257,16 +367,16 @@ function initSearchOverlay() {
   });
 
   // Xử lý submit form tìm kiếm
-  document.addEventListener('submit', function(e) {
+  document.addEventListener('submit', async function(e) {
     if (e.target && e.target.id === 'searchForm') {
       e.preventDefault();
       const query = document.getElementById('searchInputOverlay').value.trim();
       if (query) {
-        // Thực hiện tìm kiếm, ví dụ chuyển trang hoặc gọi API
-        // window.location.href = `/search?query=${encodeURIComponent(query)}`;
-        alert('Tìm kiếm: ' + query);
-        hideSearchOverlay();
+        window.location.href = `/searchBooks?query=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = `/searchBooks`;
       }
+      hideSearchOverlay();
     }
   });
 }
@@ -330,9 +440,7 @@ function showHeaderSearchBar() {
     e.preventDefault();
     const query = document.getElementById('headerSearchInput').value.trim();
     if (query) {
-      // window.location.href = `/search?query=${encodeURIComponent(query)}`;
-      alert('Tìm kiếm: ' + query);
-      closeHeaderSearchBarWithTransition();
+      window.location.href = `/searchBooks?query=${encodeURIComponent(query)}`;
     }
   };
 
@@ -404,18 +512,134 @@ function initSearchBarButton() {
   };
 }
 
-// Tải header và footer từ components
-fetch('./components/header.html')
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById('header-placeholder').innerHTML = data;
-    if (typeof initHeaderPanel === 'function') initHeaderPanel();
-    if (typeof initCartPanel === 'function') initCartPanel();
-    if (typeof initSearchBarButton === 'function') initSearchBarButton();
-  });
+// ====== HEADER/FOOTER INIT LOGIC ENHANCED ======
 
-fetch('./components/footer.html')
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById('footer-placeholder').innerHTML = data;
-  });
+// Debug helper for header state
+window.debugHeaderState = function() {
+  const user = window.AuthManager && window.AuthManager.getUser ? window.AuthManager.getUser() : null;
+  const isAuth = window.AuthManager && window.AuthManager.isAuthenticated ? window.AuthManager.isAuthenticated() : false;
+  const token = localStorage.getItem('authToken');
+  const userData = localStorage.getItem('userData');
+  console.log('[debugHeaderState] isAuthenticated:', isAuth, '\nuser:', user, '\nauthToken:', token, '\nuserData:', userData);
+  return { isAuthenticated: isAuth, user, authToken: token, userData };
+};
+
+// Main header/footer loader
+function loadHeaderFooter() {
+  // Load header
+  fetch('/components/header.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('header-placeholder').innerHTML = data;
+      // Gọi updateHeaderAuthState ngay sau khi gắn header vào DOM
+      if (typeof updateHeaderAuthState === 'function') updateHeaderAuthState();
+      if (typeof initHeaderPanel === 'function') initHeaderPanel();
+      if (typeof initCartPanel === 'function') initCartPanel();
+      if (typeof initSearchBarButton === 'function') initSearchBarButton();
+      // Add logout button handler and auth state management after header is loaded
+      setTimeout(() => {
+        // Remove any old event listeners to avoid stacking
+        document.removeEventListener('click', window._headerLogoutDelegation, true);
+        window.removeEventListener('authStateChanged', window._headerAuthStateChanged, true);
+        window.removeEventListener('storage', window._headerStorageChanged, true);
+        // Delegated logout button handler
+        window._headerLogoutDelegation = function(e) {
+          if (e.target.id === 'logoutBtn' || (e.target.closest && e.target.closest('#logoutBtn'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🚪 [callHeaderFooter] Logout button clicked via delegation');
+            handleLogout();
+          }
+        };
+        document.addEventListener('click', window._headerLogoutDelegation, true);
+        // Auth state changed event
+        window._headerAuthStateChanged = function() {
+          console.log('🔄 [callHeaderFooter] Auth state changed event received');
+          updateHeaderAuthState();
+        };
+        window.addEventListener('authStateChanged', window._headerAuthStateChanged, true);
+        // Storage event for cross-tab sync
+        window._headerStorageChanged = function(e) {
+          if (e.key === 'authToken' || e.key === 'userData') {
+            console.log('🔄 [callHeaderFooter] Storage changed, updating header...', e.key);
+            updateHeaderAuthState();
+          }
+        };
+        window.addEventListener('storage', window._headerStorageChanged, true);
+        // Update auth state after everything is loaded
+        updateHeaderAuthState();
+        // Also try again after a short delay to ensure all scripts are loaded
+        setTimeout(updateHeaderAuthState, 500);
+      }, 200);
+    });
+  // Load footer
+  fetch('/components/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer-placeholder').innerHTML = data;
+    });
+}
+
+// Entry point: load header/footer immediately (no dependency wait)
+loadHeaderFooter();
+
+// (Đã bỏ hoàn toàn các đoạn fetch header/footer cũ và logic waitForDependencies)
+// ====== PATCH AuthManager FOR CROSS-TAB LOGIN/LOGOUT SYNC ======
+(function patchAuthManagerForSync() {
+  function fireStorageEvent(key, oldValue, newValue) {
+    // Tạo sự kiện storage giả lập cho các tab khác
+    if (typeof window === 'undefined') return;
+    const event = document.createEvent('StorageEvent');
+    event.initStorageEvent('storage', false, false, key, oldValue, newValue, window.location.href, localStorage);
+    window.dispatchEvent(event);
+  }
+  function patchLogout() {
+    if (!window.AuthManager || !window.AuthManager.logout || window.AuthManager._patchedForSync) return;
+    const oldLogout = window.AuthManager.logout;
+    window.AuthManager.logout = function() {
+      const oldToken = localStorage.getItem('authToken');
+      const oldUser = localStorage.getItem('userData');
+      const result = oldLogout.apply(this, arguments);
+      // Đảm bảo localStorage đã xóa
+      setTimeout(() => {
+        fireStorageEvent('authToken', oldToken, null);
+        fireStorageEvent('userData', oldUser, null);
+      }, 10);
+      // Phát custom event cho các script khác nếu cần
+      window.dispatchEvent(new Event('authStateChanged'));
+      return result;
+    };
+    window.AuthManager._patchedForSync = true;
+  }
+  function patchLogin() {
+    if (!window.AuthManager || !window.AuthManager.login || window.AuthManager._patchedLoginForSync) return;
+    const oldLogin = window.AuthManager.login;
+    window.AuthManager.login = function() {
+      const oldToken = localStorage.getItem('authToken');
+      const oldUser = localStorage.getItem('userData');
+      const result = oldLogin.apply(this, arguments);
+      setTimeout(() => {
+        const newToken = localStorage.getItem('authToken');
+        const newUser = localStorage.getItem('userData');
+        fireStorageEvent('authToken', oldToken, newToken);
+        fireStorageEvent('userData', oldUser, newUser);
+      }, 10);
+      window.dispatchEvent(new Event('authStateChanged'));
+      return result;
+    };
+    window.AuthManager._patchedLoginForSync = true;
+  }
+  // Patch ngay nếu AuthManager đã có, hoặc patch lại khi AuthManager xuất hiện
+  if (window.AuthManager) {
+    patchLogout();
+    patchLogin();
+  } else {
+    const interval = setInterval(() => {
+      if (window.AuthManager) {
+        patchLogout();
+        patchLogin();
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+})();
