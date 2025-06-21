@@ -3,7 +3,6 @@ const Author = require('../models/Author');
 const Category = require('../models/Category');
 const csv = require("csv-parser");
 const fs = require("fs");
-const path = require('path');
 
 const BookService = {
     async findOrCreateCategory(name) {
@@ -31,7 +30,8 @@ const BookService = {
             category,
             description,
             price,
-            publicationYear
+            publicationYear,
+            imageUrl
         } = data;
 
         if (!title || !author || !category) {
@@ -44,19 +44,20 @@ const BookService = {
         // Tìm sách theo tiêu đề
         let book = await Book.findOne({ title });
 
-        if (!book) {
-            book = new Book({
-                title,
-                author: authorDoc._id,
-                category: categoryDoc._id,
-                description,
-                price,
-                publicationYear
-            });
-
-            await book.save();
+        if (book) {
+            throw new Error("Sách đã tồn tại trong database")
         }
+        book = new Book({
+            title,
+            author: authorDoc._id,
+            category: categoryDoc._id,
+            description,
+            price,
+            publicationYear,
+            imageUrl
+        });
 
+        await book.save();
         return book;
     },
 
@@ -123,6 +124,7 @@ const BookService = {
                 path: 'category',
                 select: 'name'
             })
+            .populate('availableStock')
             .skip(skip)
             .limit(limit);
 
@@ -137,6 +139,7 @@ const BookService = {
             quantity: book.availableStock,
             description: book.description,
             publishedYear: book.publicationYear,
+            imageUrl: book.imageUrl,
             createdAt: book.createdAt,
             updatedAt: book.updatedAt
         }));
@@ -156,7 +159,8 @@ const BookService = {
             .populate({
                 path: 'category',
                 select: 'name'
-            });
+            })
+            .populate('availableStock')
 
         if (!book) {
             return null;
@@ -172,6 +176,7 @@ const BookService = {
             quantity: book.availableStock,
             description: book.description,
             publishedYear: book.publicationYear,
+            imageUrl: book.imageUrl,
             createdAt: book.createdAt,
             updatedAt: book.updatedAt
         };
@@ -207,7 +212,8 @@ const BookService = {
 
         const updatedBook = await Book.findByIdAndUpdate(id, updateData, { new: true })
             .populate('author', 'name')
-            .populate('category', 'name');
+            .populate('category', 'name')
+            .populate('availableStock')
 
         if (!updatedBook) {
             return null;
@@ -222,6 +228,7 @@ const BookService = {
             price: updatedBook.price,
             description: updatedBook.description,
             publishedYear: updatedBook.publicationYear,
+            imageUrl: updatedBook.imageUrl,
             createdAt: updatedBook.createdAt,
             updatedAt: updatedBook.updatedAt
         };

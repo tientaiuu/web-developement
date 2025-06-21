@@ -1,8 +1,5 @@
 const Book = require('../models/Book');
 const BookService = require('../services/book.service');
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parser');
 
 const BookController = {
     // Thêm một sách
@@ -29,7 +26,6 @@ const BookController = {
 
     async searchBook(req, res) {
         try {
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             const { keyword } = req.query; // Sử dụng query thay vì body cho GET request
             const results = await BookService.searchBook({ keyword });
             res.status(200).json({
@@ -38,7 +34,6 @@ const BookController = {
                 total: results.total
             });
         } catch (error) {
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.status(400).json({
                 success: false,
                 error: error.message
@@ -49,7 +44,6 @@ const BookController = {
     // Lấy sách theo ID
     async getBookById(req, res) {
         try {
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             const { id } = req.params;
             const book = await BookService.getBookById(id);
             if (!book) {
@@ -63,7 +57,6 @@ const BookController = {
                 book: book
             });
         } catch (error) {
-            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.status(400).json({
                 success: false,
                 error: error.message
@@ -72,34 +65,50 @@ const BookController = {
     },
 
     // Lấy all sách
-    getAllBook: (req, res) => {
-        const results = [];
-        fs.createReadStream(path.join(__dirname, '../../uploads/book_data.csv'))
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                res.json(results);
-            })
-            .on('error', (err) => {
-                res.status(500).json({ error: 'Lỗi đọc file CSV' });
-            });
-    },
+    async getAllBook(req, res) {
+        try {
+            // Lấy limit và sort từ query params (nếu có)
+            const limit = parseInt(req.query.limit) || 0;
+            const sort = req.query.sort || '-createdAt';
 
-    // Lấy tất cả category từ file CSV
-    getAllCategories: (req, res) => {
-        const results = new Set();
-        fs.createReadStream(path.join(__dirname, '../../uploads/book_data.csv'), { encoding: 'utf8' })
-            .pipe(csv())
-            .on('data', (data) => {
-                if (data.category) results.add(data.category);
-            })
-            .on('end', () => {
-                res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                res.json({ categories: Array.from(results) });
-            })
-            .on('error', (err) => {
-                res.status(500).json({ error: 'Lỗi đọc file CSV' });
+            let query = Book.find({})
+                .populate({
+                    path: 'author',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'category',
+                    select: 'name'
+                });
+
+            // Áp dụng sort nếu có
+            if (sort) {
+                query = query.sort(sort);
+            }
+
+            // Áp dụng limit nếu có
+            if (limit > 0) {
+                query = query.limit(limit);
+            }
+
+            const books = await query;
+
+            if (!books) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Book not found"
+                });
+            }
+            res.status(200).json({
+                success: true,
+                books: books
             });
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                error: error.message
+            });
+        }
     },
 
     // Cập nhật sách

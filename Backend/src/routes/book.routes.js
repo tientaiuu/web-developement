@@ -12,6 +12,5 @@ router.put("/:id", AuthService.verifyToken, AuthService.checkRole('admin'), Book
 router.delete("/:id", AuthService.verifyToken, AuthService.checkRole('admin'), BookController.deleteBook); // Xóa sách
 router.post("/import", AuthService.verifyToken, AuthService.checkRole('admin'), BookController.createBook);
 router.post("/import-csv", AuthService.verifyToken, AuthService.checkRole('admin'), upload.single("file"), BookController.importBooksFromCSV);
-router.get("/categories", BookController.getAllCategories); // Lấy tất cả category động
 
 module.exports = router;

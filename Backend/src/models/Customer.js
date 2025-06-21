@@ -7,9 +7,24 @@ const Custormer_Schema = mongoose.Schema(
             required: true,
             trim: true
         },
+        avatar: String,
+        sex: String,
+        birthday: Date,
         address: String,
         phone: String,
         email: String,
+        salesInvoices: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'SalesInvoice'
+            }
+        ],
+        rentalInvoices: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'RentalInvoice'
+            }
+        ],
         debt: {
             type: Number,
             default: 0
