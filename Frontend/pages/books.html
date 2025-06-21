@@ -275,25 +275,24 @@
         setTimeout(() => {
           document.querySelectorAll('.book-card-item').forEach(card => {
             card.addEventListener('click', function(e) {
-              // Không chuyển trang nếu bấm vào nút yêu thích hoặc thêm vào giỏ
               if (e.target.closest('.fav-btn') || e.target.closest('.add-to-cart-btn')) return;
               const id = this.getAttribute('data-id');
-              const book = books.find(b => b.id == id);
+              // Lấy đúng object book đã render cho card này (từ filteredBooks, không phải từ API gốc)
+              const book = filteredBooks.find(b => String(b.id) === String(id));
               if (!book) return;
-              // Tạo slug từ tên sách (không dùng unicode regex để tránh lỗi trình duyệt)
+              sessionStorage.setItem('selectedBook', JSON.stringify(book));
               function toSlug(str) {
                 return str
                   .toLowerCase()
                   .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '') // loại bỏ dấu tiếng Việt
+                  .replace(/[\u0300-\u036f]/g, '')
                   .replace(/đ/g, 'd')
-                  .replace(/[^a-z0-9\s-]/g, '') // loại ký tự đặc biệt
-                  .replace(/\s+/g, '-') // thay khoảng trắng bằng -
-                  .replace(/-+/g, '-') // loại trừ nhiều dấu - liên tiếp
-                  .replace(/^-+|-+$/g, ''); // loại bỏ - ở đầu/cuối
+                  .replace(/[^a-z0-9\s-]/g, '')
+                  .replace(/\s+/g, '-')
+                  .replace(/-+/g, '-')
+                  .replace(/^-+|-+$/g, '');
               }
               const slug = `${toSlug(book.title)}`;
-              // Đảm bảo chuyển hướng đúng cả khi chạy local hoặc deploy subfolder
               window.location.href = `${window.location.origin}/books/${slug}`;
             });
           });
@@ -405,31 +404,9 @@
       });
     }
 
-    // Fetch và render category động
-async function fetchAndRenderCategories() {
-  try {
-    const res = await fetch('http://localhost:3000/api/books/categories');
-    const data = await res.json();
-    const categories = data.categories || [];
-    const radios = document.getElementById('categoryRadios');
-    radios.innerHTML = `<label class="flex items-center space-x-3">
-      <input type="radio" name="category" value="all" checked>
-      <span class="text-gray-700">Tất cả thể loại</span>
-    </label>`;
-    categories.forEach(cat => {
-      radios.innerHTML += `<label class="flex items-center space-x-3">
-        <input type="radio" name="category" value="${cat}">
-        <span class="text-gray-700">${cat}</span>
-      </label>`;
-    });
-
-  } catch (e) {
-    // fallback nếu lỗi
-  }
-}
+  
 
     document.addEventListener('DOMContentLoaded', function() {
-      fetchAndRenderCategories();
       // Lấy danh sách sách từ backend (có hỗ trợ search)
       fetchBooksFromBackend();
     });

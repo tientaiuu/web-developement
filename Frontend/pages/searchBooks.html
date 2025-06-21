@@ -121,19 +121,7 @@
     function showLoading(show=true) {
       document.getElementById('search-loading').style.display = show ? 'flex' : 'none';
     }
-    // Fetch categories
-    async function fetchCategories() {
-      try {
-        showLoading(true);
-        const res = await fetch('http://localhost:5000/api/books/categories');
-        const data = await res.json();
-        allCategories = data.categories || [];
-      } catch (e) {
-        allCategories = [];
-      } finally {
-        showLoading(false);
-      }
-    }
+   
     // Fetch authors
     async function fetchAuthors() {
       try {
@@ -457,19 +445,41 @@
           card.addEventListener('click', function(e) {
             if (e.target.closest('.add-to-cart-btn')) return;
             const id = this.getAttribute('data-id');
+            // Lấy đúng object book đã render cho card này (từ filteredBooks)
             const book = filteredBooks.find(b => b.id == id);
             if (!book) return;
+            // Đảm bảo object book truyền sang detail luôn đủ trường như books.html
             function toSlug(str) {
               return str
                 .toLowerCase()
                 .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\u0300-\u036f/g, '')
                 .replace(/đ/g, 'd')
                 .replace(/[^a-z0-9\s-]/g, '')
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-+|-+$/g, '');
             }
+            // Chuẩn hóa object book (tương tự normalizeBookObject ở bookDetail.html)
+            function normalizeBookObject(book) {
+              return {
+                id: book.id || '',
+                title: book.title || '',
+                author: book.authors || '',
+                category: book.category || '',
+                price: book.current_price || 0,
+                oldPrice: book.original_price !== undefined ? book.original_price : undefined,
+                image: book.cover_link || '',
+                rating: book.avg_rating !== undefined ? book.avg_rating : 4.8,
+                n_review: book.n_review !== undefined ? book.n_review : 20,
+                quantity: book.quantity !== undefined ? book.quantity : 0,
+                createdAt: book.createdAt,
+                updatedAt: book.updatedAt,
+                // ... giữ lại các trường khác nếu cần
+                ...book
+              };
+            }
+            sessionStorage.setItem('selectedBook', JSON.stringify(normalizeBookObject(book)));
             const slug = `${toSlug(book.title)}`;
             window.location.href = `${window.location.origin}/books/${slug}`;
           });
