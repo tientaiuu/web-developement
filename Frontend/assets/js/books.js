@@ -323,6 +323,59 @@ function clearSearch() {
     loadBooks();
 }
 
+// Wishlist logic
+function getWishlist() {
+  try {
+    return JSON.parse(localStorage.getItem('wishlistItems') || '[]');
+  } catch {
+    return [];
+  }
+}
+function setWishlist(arr) {
+  localStorage.setItem('wishlistItems', JSON.stringify(arr));
+  window.dispatchEvent(new Event('wishlistUpdated'));
+}
+function isBookInWishlist(bookId) {
+  const wishlist = getWishlist();
+  return wishlist.some(item => String(item.id) === String(bookId));
+}
+function toggleWishlist(book) {
+  let wishlist = getWishlist();
+  const idx = wishlist.findIndex(item => String(item.id) === String(book.id));
+  if (idx >= 0) {
+    wishlist.splice(idx, 1);
+  } else {
+    wishlist.unshift({
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      price: book.price,
+      image: book.image || book.imageUrl || '',
+      category: book.category
+    });
+  }
+  setWishlist(wishlist);
+}
+
+// Cập nhật icon fav-btn theo trạng thái wishlist
+function updateWishlistIcons() {
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    const card = btn.closest('.book-card-item');
+    if (!card) return;
+    const id = card.getAttribute('data-id');
+    const icon = btn.querySelector('i');
+    if (isBookInWishlist(id)) {
+      btn.classList.add('faved');
+      icon.classList.remove('ri-star-line');
+      icon.classList.add('ri-star-fill');
+    } else {
+      btn.classList.remove('faved');
+      icon.classList.remove('ri-star-fill');
+      icon.classList.add('ri-star-line');
+    }
+  });
+}
+
 // Add event listeners to book cards
 function addBookCardEventListeners() {
     // Add to cart buttons
@@ -342,19 +395,18 @@ function addBookCardEventListeners() {
 
     // Favorite buttons
     document.querySelectorAll('.fav-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.classList.toggle('faved');
-            const icon = this.querySelector('i');
-            if (this.classList.contains('faved')) {
-                icon.classList.remove('ri-star-line');
-                icon.classList.add('ri-star-fill');
-            } else {
-                icon.classList.remove('ri-star-fill');
-                icon.classList.add('ri-star-line');
-            }
-        });
+      btn.onclick = function(e) {
+        e.stopPropagation();
+        const card = btn.closest('.book-card-item');
+        if (!card) return;
+        const id = card.getAttribute('data-id');
+        const book = filteredBooks.find(b => String(b.id) === String(id));
+        if (!book) return;
+        toggleWishlist(book);
+        updateWishlistIcons();
+      };
     });
+    updateWishlistIcons();
 }
 
 // Utility functions
@@ -453,3 +505,34 @@ window.clearSearch = clearSearch;
 window.addToCart = addToCart;
 window.toggleFavorite = toggleFavorite;
 window.viewBookDetail = viewBookDetail;
+
+
+const bookList = document.getElementById("book-list");
+bookList.innerHTML = "";
+
+books.forEach(book => {
+  const bookHTML = `
+    <div class="relative bg-white p-4 rounded-lg shadow-md">
+      <!-- ⭐ Đây là nơi bạn thêm nút wishlist -->
+      <button class="wishlist-toggle absolute top-2 right-2 bg-white p-1 rounded-full shadow"
+              data-slug="${book.slug}"
+              data-title="${book.title}"
+              data-author="${book.author}"
+              data-image="${book.image}"
+              data-price="${book.price}">
+        <i class="ri-star-line text-orange-400 text-lg"></i>
+      </button>
+
+      <img src="${book.image}" alt="${book.title}" class="w-full h-48 object-cover rounded">
+      <div class="mt-2">
+        <p class="text-sm text-gray-500">${book.category}</p>
+        <h3 class="text-base font-semibold truncate">${book.title}</h3>
+        <p class="text-sm text-gray-500">by ${book.author}</p>
+        <p class="text-lg font-bold text-primary mt-1">${book.price.toLocaleString()} VNĐ</p>
+      </div>
+    </div>
+  `;
+  bookList.insertAdjacentHTML("beforeend", bookHTML);
+});
+
+attachWishlistEvents(); // Gắn sự kiện cho các nút sao vừa tạo

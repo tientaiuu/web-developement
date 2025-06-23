@@ -222,124 +222,158 @@
       window.searchKeyword = keyword;
       fetchBooksFromBackend();
     }
-    function renderBooks(category, page = 1) {
-      const grid = document.getElementById("booksGrid");
-      grid.classList.remove("fadein");
-      grid.classList.add("fadeout");
-      setTimeout(() => {
-        currentCategory = category;
-        filteredBooks = (category && category !== "all") ? books.filter(b => b.category === category) : books;
-        const totalPages = Math.ceil(filteredBooks.length / PAGE_SIZE);
-        currentPage = page; 
+function renderBooks(category, page = 1) {
+  const grid = document.getElementById("booksGrid");
+  grid.classList.remove("fadein");
+  grid.classList.add("fadeout");
 
-        grid.innerHTML = "";
+  setTimeout(() => {
+    // 1. Cập nhật state
+    currentCategory = category;
+    filteredBooks = (category && category !== "all")
+      ? books.filter(b => b.category === category)
+      : books;
+    const totalPages = Math.ceil(filteredBooks.length / PAGE_SIZE);
+    currentPage = page;
 
-        if (filteredBooks.length === 0) {
-          grid.innerHTML = `<div class="text-center text-gray-500 py-12 text-lg col-span-full">Không có sách nào thuộc thể loại này.</div>`;
-          document.getElementById("pagination").innerHTML = "";
-          grid.classList.remove("fadeout");
-          grid.classList.add("fadein");
-          return;
-        }
+    // 2. Xóa nội dung cũ
+    grid.innerHTML = "";
 
-        const start = (currentPage - 1) * PAGE_SIZE;
-        const end = start + PAGE_SIZE;
-  filteredBooks.slice(start, end).forEach(book => {
-  grid.innerHTML += `
-    <div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full transition group cursor-pointer book-card-item" data-id="${book.id}">
-      <div class="relative h-96 w-full flex-shrink-0">
-        <img src="${book.image}" alt="${book.title}" class="w-full h-full object-cover object-top">
-        <button class="absolute top-2 right-2 w-9 h-9 flex items-center justify-center fav-btn bg-[#eaeaea]/90 rounded-full transition shadow-sm" title="Yêu thích">
-          <i class="ri-star-line text-gray-800"></i>
-        </button>
-        <span class="absolute top-2 left-2 bg-[#eaeaea]/90 text-[#f7931e] shadow-sm text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 shadow-sm" title="Đánh giá">
-            <i class="ri-star-s-fill text-[#f7931e] text-base"></i> ${book.rating.toFixed(1)}
-        </span>
-      </div>
-      <div class="p-4 flex flex-col flex-1">
-        <div class="text-xs text-gray-500 mb-1">${book.category}</div>
-        <h3 class="font-semibold text-gray-800 mb-1">${book.title}</h3>
-        <p class="text-sm text-gray-600 mb-3">${book.author}</p>
-        <div class="flex justify-between items-center mt-auto">
-          <div>
-            <span class="font-semibold text-primarynavy">${book.price.toLocaleString()}₫</span>
-            ${book.oldPrice ? `<span class="text-sm text-gray-500 line-through ml-2">${book.oldPrice.toLocaleString()}₫</span>` : ""}
-          </div>
-          <button class="add-to-cart-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-[8px] whitespace-nowrap transition">Thêm vào giỏ</button>
-        </div>
-      </div>
-    </div>
-  `;
-});
-        // Thêm sự kiện click cho card sách để chuyển sang trang chi tiết
-        setTimeout(() => {
-          document.querySelectorAll('.book-card-item').forEach(card => {
-            card.addEventListener('click', function(e) {
-              if (e.target.closest('.fav-btn') || e.target.closest('.add-to-cart-btn')) return;
-              const id = this.getAttribute('data-id');
-              // Lấy đúng object book đã render cho card này (từ filteredBooks, không phải từ API gốc)
-              const book = filteredBooks.find(b => String(b.id) === String(id));
-              if (!book) return;
-              sessionStorage.setItem('selectedBook', JSON.stringify(book));
-              function toSlug(str) {
-                return str
-                  .toLowerCase()
-                  .normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-                  .replace(/đ/g, 'd')
-                  .replace(/[^a-z0-9\s-]/g, '')
-                  .replace(/\s+/g, '-')
-                  .replace(/-+/g, '-')
-                  .replace(/^-+|-+$/g, '');
-              }
-              const slug = `${toSlug(book.title)}`;
-              window.location.href = `${window.location.origin}/books/${slug}`;
-            });
-          });
-        }, 0);
-
-        // Hiệu ứng khi bấm "Thêm vào giỏ"
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation(); // Ngăn click lan ra ngoài làm lệch layout
-            const originalWidth = btn.offsetWidth;
-            btn.innerHTML = "✔ Đã thêm";
-            btn.classList.add("bg-green-500", "text-white");
-
-            btn.style.width = originalWidth + "px";
-            btn.style.minWidth = originalWidth + "px";
-            setTimeout(() => {
-              btn.innerHTML = "Thêm vào giỏ";
-              btn.classList.remove("bg-green-500", "text-white");
-              btn.style.width = "";
-              btn.style.minWidth = "";
-            }, 1200);
-          });
-        });
-
-        // Hiệu ứng khi bấm "Yêu thích"
-        document.querySelectorAll('.fav-btn').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            btn.classList.toggle("faved");
-            const icon = btn.querySelector("i");
-            if (btn.classList.contains("faved")) {
-              icon.classList.remove("ri-star-line");
-              icon.classList.add("ri-star-fill");
-            } else {
-              icon.classList.remove("ri-star-fill");
-              icon.classList.add("ri-star-line");
-            }
-          });
-        });
-
-        // Render phân trang
-        renderPagination(totalPages);
-
-        grid.classList.remove("fadeout");
-        grid.classList.add("fadein");
-      }, 200);
+    // 3. Nếu không có sách nào
+    if (filteredBooks.length === 0) {
+      grid.innerHTML = `
+        <div class="text-center text-gray-500 py-12 text-lg col-span-full">
+          Không có sách nào thuộc thể loại này.
+        </div>`;
+      document.getElementById("pagination").innerHTML = "";
+      grid.classList.remove("fadeout");
+      grid.classList.add("fadein");
+      return;
     }
+
+    // 4. Lấy slice theo trang và vẽ
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    filteredBooks.slice(start, end).forEach(book => {
+      grid.innerHTML += `
+        <div
+          class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full transition group cursor-pointer book-card-item"
+          data-id="${book.id}">
+          <div class="relative h-96 w-full flex-shrink-0">
+            <img
+              src="${book.image}"
+              alt="${book.title}"
+              class="w-full h-full object-cover object-top" />
+            <button
+              class="absolute top-2 right-2 w-9 h-9 flex items-center justify-center fav-btn bg-[#eaeaea]/90 rounded-full transition shadow-sm"
+              title="Yêu thích">
+              <i class="ri-star-line text-gray-800"></i>
+            </button>
+            <span
+              class="absolute top-2 left-2 bg-[#eaeaea]/90 text-[#f7931e] shadow-sm text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1"
+              title="Đánh giá">
+              <i class="ri-star-s-fill text-[#f7931e] text-base"></i> ${book.rating.toFixed(1)}
+            </span>
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <div class="text-xs text-gray-500 mb-1">${book.category}</div>
+            <h3 class="font-semibold text-gray-800 mb-1">${book.title}</h3>
+            <p class="text-sm text-gray-600 mb-3">${book.author}</p>
+            <div class="flex justify-between items-center mt-auto">
+              <div>
+                <span class="font-semibold text-primarynavy">${book.price.toLocaleString()}₫</span>
+                ${book.oldPrice
+                  ? `<span class="text-sm text-gray-500 line-through ml-2">${book.oldPrice.toLocaleString()}₫</span>`
+                  : ''}
+              </div>
+              <button
+                class="add-to-cart-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-[8px] whitespace-nowrap transition">
+                Thêm vào giỏ
+              </button>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    // 5. Chuyển đến trang chi tiết khi click vào card (ngoại trừ click vào nút yêu thích / thêm giỏ)
+    document.querySelectorAll('.book-card-item').forEach(card => {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.fav-btn') || e.target.closest('.add-to-cart-btn')) return;
+        const id = this.getAttribute('data-id');
+        const book = filteredBooks.find(b => String(b.id) === String(id));
+        if (!book) return;
+
+        // chuyển tiêu đề thành slug
+        const slug = book.title
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-');
+
+        // đường dẫn tương đối từ books.html (trong pages/) sang bookDetail.html
+        window.location.href = `${window.location.origin}/books/${slug}`;
+      });
+    });
+
+    // 6. Gắn sự kiện cho nút “Thêm vào giỏ”
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const card = btn.closest('.book-card-item');
+        const id = card.dataset.id;
+        const book = filteredBooks.find(b => String(b.id) === String(id));
+        let cart = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        const found = cart.find(item => String(item.id) === String(book.id));
+        if (found) {
+          found.quantity++;
+        } else {
+          cart.push({ ...book, quantity: 1 });
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+
+        // Hiệu ứng nút
+        const w = btn.offsetWidth;
+        btn.innerHTML = "✔ Đã thêm";
+        btn.classList.add("bg-green-500", "text-white");
+        btn.style.minWidth = w + "px";
+        setTimeout(() => {
+          btn.innerHTML = "Thêm vào giỏ";
+          btn.classList.remove("bg-green-500", "text-white");
+          btn.style.minWidth = "";
+        }, 1200);
+
+        window.dispatchEvent(new Event('cartUpdated'));
+      });
+    });
+
+    // 7. Gắn sự kiện cho nút “Yêu thích”
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const icon = btn.querySelector('i');
+        btn.classList.toggle('faved');
+        icon.classList.toggle('ri-star-fill');
+        icon.classList.toggle('ri-star-line');
+      });
+    });
+
+    // 8. Vẽ phân trang
+    renderPagination(totalPages);
+
+    // 9. Khởi tạo lại wishlist & badge
+    initWishlistButtons();
+    updateWishlistCount();
+
+    // 10. Hoàn tất animation
+    grid.classList.remove("fadeout");
+    grid.classList.add("fadein");
+  }, 200);
+}
+
+
 
     function renderPagination(totalPages) {
       const pag = document.getElementById("pagination");
@@ -413,33 +447,63 @@
 
  
 
-    function renderSpecialBookCard(book, section) {
-  return `
-    <div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full transition group cursor-pointer book-card-item" data-id="${book.id}">
-      <div class="relative h-96 w-full flex-shrink-0">
-        <img src="${book.image}" alt="${book.title}" class="w-full h-full object-cover object-top">
-        <button class="absolute top-2 right-2 w-9 h-9 flex items-center justify-center fav-btn bg-[#eaeaea]/90 rounded-full transition shadow-sm" title="Yêu thích">
-          <i class="ri-star-line text-gray-800"></i>
-        </button>
-        <span class="absolute top-2 left-2 bg-[#eaeaea]/90 text-[#f7931e] shadow-sm text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 shadow-sm" title="Đánh giá">
+  // nếu bạn cần slug từ title:
+  function toSlug(str) {
+    return str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function renderSpecialBookCard(book) {
+    return `
+      <div
+        class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full transition group cursor-pointer book-card-item"
+        data-id="${book.id}"
+        data-slug="${toSlug(book.title)}"
+        data-price="${book.price}">
+        <div class="relative h-96 w-full flex-shrink-0">
+          <img
+            src="${book.image}"
+            alt="${book.title}"
+            class="w-full h-full object-cover object-top" />
+          <button
+            class="absolute top-2 right-2 w-9 h-9 flex items-center justify-center fav-btn bg-[#eaeaea]/90 rounded-full transition shadow-sm"
+            title="Yêu thích">
+            <i class="ri-star-line text-gray-800"></i>
+          </button>
+          <span
+            class="absolute top-2 left-2 bg-[#eaeaea]/90 text-[#f7931e] shadow-sm text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1"
+            title="Đánh giá">
             <i class="ri-star-s-fill text-[#f7931e] text-base"></i> ${book.rating.toFixed(1)}
-        </span>
-      </div>
-      <div class="p-4 flex flex-col flex-1">
-        <div class="text-xs text-gray-500 mb-1">${book.category}</div>
-        <h3 class="font-semibold text-gray-800 mb-1">${book.title}</h3>
-        <p class="text-sm text-gray-600 mb-3">${book.author}</p>
-        <div class="flex justify-between items-center mt-auto">
-          <div>
-            <span class="font-semibold text-primarynavy">${book.price.toLocaleString()}₫</span>
-            ${book.oldPrice ? `<span class="text-sm text-gray-500 line-through ml-2">${book.oldPrice.toLocaleString()}₫</span>` : ""}
+          </span>
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="text-xs text-gray-500 mb-1">${book.category}</div>
+          <h3 class="font-semibold text-gray-800 mb-1">${book.title}</h3>
+          <p class="text-sm text-gray-600 mb-3">${book.author}</p>
+          <div class="flex justify-between items-center mt-auto">
+            <div>
+              <span class="font-semibold text-primarynavy">${book.price.toLocaleString()}₫</span>
+              ${book.oldPrice
+                ? `<span class="text-sm text-gray-500 line-through ml-2">${book.oldPrice.toLocaleString()}₫</span>`
+                : ''}
+            </div>
+            <button
+              class="add-to-cart-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-[8px] whitespace-nowrap transition">
+              Thêm vào giỏ
+            </button>
           </div>
-          <button class="add-to-cart-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-[8px] whitespace-nowrap transition">Thêm vào giỏ</button>
         </div>
       </div>
-    </div>
-  `;
-}
+    `;
+  }
+
 
 // Hàm lấy ngẫu nhiên n phần tử từ mảng
 function getRandomBooks(arr, n) {
@@ -498,6 +562,8 @@ function renderNewFictionSection() {
   }
 }
 
-  </script>
+</script>
+<script src="./assets/js/favorites.js"></script>
+
 </body>
 </html>

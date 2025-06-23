@@ -80,6 +80,10 @@ app.get('/searchBooks', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'Frontend/pages/searchBooks.html'));
 });
 
+app.get('/cart', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'Frontend/pages/cart.html'));
+});
+
 app.get('/settings', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/pages', 'settingA.html'));
 });

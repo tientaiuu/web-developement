@@ -115,11 +115,26 @@
           </svg>
         </button>
        
-        <button id="cartBtn" class="cart-btn cart-badge w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primarynavy hover:text-white focus:outline-none focus:ring-2 focus:ring-primarynavy" aria-label="Shopping Cart">
+        <button id="cartBtn" class="cart-btn relative w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primarynavy hover:text-white focus:outline-none focus:ring-2 focus:ring-primarynavy" aria-label="Shopping Cart">
           <i class="ri-shopping-cart-2-line text-xl"></i>
+          <span class="cart-badge absolute -top-1 -right-1 bg-orange-400 text-white text-xs font-semibold w-5 h-5 items-center justify-center rounded-full hidden"></span>
         </button>
     
-         <button id="userBtn" class="user-btn ml-2 w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primarynavy hover:text-white focus:outline-none focus:ring-2 focus:ring-primarynavy" aria-label="User">
+        <!-- Icon trái tim - Yêu thích -->
+        <button id="wishlistBtn"
+                class="relative w-10 h-10 flex items-center justify-center rounded-full
+                      transition-colors duration-200
+                      hover:bg-primarynavy hover:text-white
+                      focus:outline-none focus:ring-2 focus:ring-primarynavy"
+                aria-label="Yêu thích">
+          <i class="ri-heart-line text-xl"></i>
+          <span id="wishlist-count"
+                class="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+            0
+          </span>
+        </button>
+
+        <button id="userBtn" class="user-btn ml-2 w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-primarynavy hover:text-white focus:outline-none focus:ring-2 focus:ring-primarynavy" aria-label="User">
           <i class="ri-user-line text-xl"></i>
         </button>
 
@@ -201,6 +216,9 @@
     </div>  
   </div>
 </div>
+
+
+
 <!-- Slide-in cart panel -->
 <div id="cartPanel"
     class="fixed top-0 right-0 h-full w-96 max-w-full bg-white shadow-2xl border-l border-gray-200 z-[9999] rounded-l-xl
@@ -211,24 +229,7 @@
     <button id="closeCartPanel" class="text-gray-500 hover:text-primarynavy text-2xl">&times;</button>
   </div>
   <div class="flex-1 overflow-y-auto p-5 space-y-4" id="cartItems">
-    <!-- Hiển thị sản phẩm trong giỏ hàng, ví dụ: -->
-    <div class="flex items-center gap-3" id="cartItemExample">
-      <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1495635816i/32521178.jpg" alt="Sách" class="w-14 h-20 object-cover rounded border" />
-      <div class="flex-1">
-        <div class="font-medium text-gray-800">Tuổi trẻ đáng giá bao nhiêu</div>
-        <div class="text-sm text-gray-500">Rosie Nguyễn</div>
-        <div class="flex items-center gap-2 mt-1">
-          <span class="text-primarynavy font-semibold">120.000đ</span>
-          <span class="text-xs text-gray-400 line-through">150.000đ</span>
-        </div>
-        <div class="flex items-center gap-2 mt-2">
-          <button class="px-2 py-1 border rounded">-</button>
-          <input type="number" min="1" value="1" class="w-12 text-center border rounded focus:outline-none focus:ring-2 focus:ring-primarynavy no-spinner" />
-          <button class="px-2 py-1 border rounded">+</button>
-          <button class="ml-2 text-red-500 hover:underline text-l">Xóa</button>
-        </div>
-      </div>
-    </div>
+    <!-- Sản phẩm trong giỏ hàng sẽ được render tự động bằng JS -->
     <div class="text-gray-500 text-center" id="cartEmptyMsg" style="display: none;">Chưa có sản phẩm nào trong giỏ hàng.</div>
   </div>
   <div class="p-5 border-t">
@@ -241,6 +242,20 @@
   </div>
 </div>
 
+<!-- Slide-in wishlist panel -->
+<div id="wishlistPanel"
+     class="fixed top-0 right-0 h-full w-96 max-w-full bg-white shadow-2xl border-l border-gray-200 z-[9999] rounded-l-xl
+            translate-x-full hidden transition-transform duration-300 ease-in-out
+            flex flex-col">
+  <div class="flex items-center justify-between p-5 border-b">
+    <span class="font-bold text-lg text-gray-800">Sách Yêu Thích</span>
+    <button id="closeWishlistPanel" class="text-gray-500 hover:text-primarynavy text-2xl">&times;</button>
+  </div>
+  <div class="flex-1 overflow-y-auto p-5 space-y-4" id="wishlist-items">
+    <!-- Các mục yêu thích sẽ được render tự động -->
+  </div>
+</div>
+
 <style>
   /* Ẩn mũi tên tăng giảm mặc định trên input[type=number] cho Chrome, Safari, Edge */
   input[type=number].no-spinner::-webkit-inner-spin-button,
@@ -248,6 +263,19 @@
     -webkit-appearance: none;
     appearance: none;
     margin: 0;
+  }
+  .cart-badge {
+    display: none;
+  }
+  .cart-badge.show {
+    display: flex !important;
+  }
+    #wishlistPanel::-webkit-scrollbar {
+    width: 6px;
+  }
+  #wishlistPanel::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
   }
 </style>
 <script>
@@ -332,4 +360,157 @@
   });
 })();
 
+// --- CART PANEL LOGIC ---
+function renderCartPanel() {
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('cartItems') || '[]'); } catch {}
+  const cartItemsDiv = document.getElementById('cartItems');
+  const cartTotalSpan = document.getElementById('cartTotal');
+  const cartEmptyMsg = document.getElementById('cartEmptyMsg');
+  if (!cartItemsDiv || !cartTotalSpan) return;
+  cartItemsDiv.innerHTML = '';
+  let total = 0;
+  if (cart.length === 0) {
+    if (cartEmptyMsg) cartEmptyMsg.style.display = '';
+    cartItemsDiv.innerHTML = '';
+    cartTotalSpan.innerText = '0đ';
+    return;
+  }
+  if (cartEmptyMsg) cartEmptyMsg.style.display = 'none';
+  cart.forEach((item, idx) => {
+    const itemTotal = item.price * item.quantity;
+    total += itemTotal;
+    cartItemsDiv.innerHTML += `
+      <div class="flex items-center gap-3 cart-item-row" data-id="${item.id}">
+        <img src="${item.image}" alt="${item.title}" class="w-14 h-20 object-cover rounded border" />
+        <div class="flex-1">
+          <div class="font-medium text-gray-800">${item.title}</div>
+          <div class="text-sm text-gray-500">${item.author}</div>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-primarynavy font-semibold">${item.price.toLocaleString()}đ</span>
+            ${item.oldPrice ? `<span class='text-xs text-gray-400 line-through'>${item.oldPrice.toLocaleString()}đ</span>` : ''}
+          </div>
+          <div class="flex items-center gap-2 mt-2">
+            <button class="px-2 py-1 border rounded cart-minus">-</button>
+            <input type="number" min="1" value="${item.quantity}" class="w-12 text-center border rounded focus:outline-none focus:ring-2 focus:ring-primarynavy no-spinner cart-qty" />
+            <button class="px-2 py-1 border rounded cart-plus">+</button>
+            <button class="ml-2 text-red-500 hover:underline text-l cart-remove">Xóa</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  cartTotalSpan.innerText = total.toLocaleString() + 'đ';
+
+  // Gán sự kiện tăng/giảm/xóa
+  cartItemsDiv.querySelectorAll('.cart-minus').forEach((btn, i) => {
+    btn.onclick = function() {
+      if (cart[i].quantity > 1) { cart[i].quantity--; }
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCartPanel();
+      window.dispatchEvent(new Event('cartUpdated'));
+    };
+  });
+  cartItemsDiv.querySelectorAll('.cart-plus').forEach((btn, i) => {
+    btn.onclick = function() {
+      cart[i].quantity++;
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCartPanel();
+      window.dispatchEvent(new Event('cartUpdated'));
+    };
+  });
+  cartItemsDiv.querySelectorAll('.cart-remove').forEach((btn, i) => {
+    btn.onclick = function() {
+      cart.splice(i, 1);
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCartPanel();
+      window.dispatchEvent(new Event('cartUpdated'));
+    };
+  });
+  cartItemsDiv.querySelectorAll('.cart-qty').forEach((input, i) => {
+    input.onchange = function() {
+      let val = parseInt(input.value);
+      if (!isNaN(val) && val > 0) {
+        cart[i].quantity = val;
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+        renderCartPanel();
+        window.dispatchEvent(new Event('cartUpdated'));
+      }
+    };
+  });
+}
+// Mở/đóng panel
+const cartBtn = document.getElementById('cartBtn');
+const cartPanel = document.getElementById('cartPanel');
+const closeCartPanel = document.getElementById('closeCartPanel');
+if (cartBtn && cartPanel) {
+  cartBtn.onclick = function() {
+    cartPanel.classList.remove('hidden');
+    cartPanel.classList.remove('translate-x-full');
+    renderCartPanel();
+  };
+}
+if (closeCartPanel && cartPanel) {
+  closeCartPanel.onclick = function() {
+    cartPanel.classList.add('hidden');
+    cartPanel.classList.add('translate-x-full');
+  };
+}
+// Tự động cập nhật panel khi có thay đổi giỏ hàng
+window.addEventListener('cartUpdated', renderCartPanel);
+// Render lần đầu khi load trang
+renderCartPanel();
 </script>
+
+<script>
+  // --- WISHLIST PANEL LOGIC ---
+  function renderWishlistPanel() {
+    if (typeof getWishlist !== 'function') return;
+    const wishlist = getWishlist();
+    const wishlistItemsDiv = document.getElementById('wishlist-items');
+    if (!wishlistItemsDiv) return;
+
+    wishlistItemsDiv.innerHTML = '';
+
+    if (wishlist.length === 0) {
+      wishlistItemsDiv.innerHTML = '<div class="text-gray-500 text-center">Chưa có sách yêu thích nào.</div>';
+      return;
+    }
+
+    wishlist.forEach(book => {
+      wishlistItemsDiv.innerHTML += `
+        <div class="flex items-center gap-3 border-b pb-3">
+          <img src="${book.image}" alt="${book.title}" class="w-12 h-16 object-cover rounded border" />
+          <div class="flex-1">
+            <div class="font-medium text-gray-800 text-sm line-clamp-2">${book.title}</div>
+            <div class="text-xs text-gray-500">${book.author}</div>
+            <div class="text-sm font-semibold text-primarynavy mt-1">${book.price.toLocaleString()}đ</div>
+          </div>
+          <button class="text-red-500 text-lg hover:text-red-700" onclick="removeFromWishlist('${book.id}')">&times;</button>
+        </div>
+      `;
+    });
+  }
+
+  // Mở/đóng wishlist panel
+  const wishlistBtn = document.getElementById('wishlistBtn');
+  const wishlistPanel = document.getElementById('wishlistPanel');
+  const closeWishlistPanel = document.getElementById('closeWishlistPanel');
+  if (wishlistBtn && wishlistPanel) {
+    wishlistBtn.onclick = function () {
+      wishlistPanel.classList.remove('hidden');
+      wishlistPanel.classList.remove('translate-x-full');
+      renderWishlistPanel(); // cập nhật nội dung
+    };
+  }
+  if (closeWishlistPanel && wishlistPanel) {
+    closeWishlistPanel.onclick = function () {
+      wishlistPanel.classList.add('hidden');
+      wishlistPanel.classList.add('translate-x-full');
+    };
+  }
+
+  // Lần đầu load
+  renderWishlistPanel();
+</script>
+
