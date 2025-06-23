@@ -220,6 +220,15 @@ function renderCart() {
     document.getElementById('cartTotal').textContent = formatVND(0);
     return;
   }
+  if (cartBadge) {
+  const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+  if (totalQty > 0) {
+    cartBadge.setAttribute('data-count', totalQty);
+  } else {
+    cartBadge.removeAttribute('data-count');
+  }
+}
+
 
   cart.forEach((item, idx) => {
     total += item.price * item.quantity;
@@ -228,7 +237,7 @@ function renderCart() {
     itemDiv.innerHTML = `
       <img src="${item.image}" alt="Sách" class="w-14 h-20 object-cover rounded border" />
       <div class="flex-1">
-        <div class="font-medium text-gray-800">${item.name}</div>
+        <div class="font-medium text-gray-800">${item.name || item.title || 'Không rõ tên sách'}</div>
         <div class="text-sm text-gray-500">${item.author}</div>
         <div class="flex items-center gap-2 mt-1">
           <span class="text-primarynavy font-semibold">${formatVND(item.price)}</span>
@@ -246,35 +255,48 @@ function renderCart() {
   });
 
   document.getElementById('cartTotal').textContent = formatVND(total);
-  if (cartBadge) cartBadge.setAttribute('data-count', cart.reduce((s, i) => s + i.quantity, 0));
+  if (cartBadge) {
+  const totalQty = cart.reduce((s, i) => s + i.quantity, 0);
+  if (totalQty > 0) {
+    cartBadge.textContent = totalQty;
+    cartBadge.classList.add('show');
+  } else {
+    cartBadge.textContent = '';
+    cartBadge.classList.remove('show');
+  }
+}
 }
 
-// Xử lý sự kiện tăng/giảm/xóa/nhập số lượng
-function cartEventHandler(e) {
-  const target = e.target;
-  if (target.matches('[data-action="decrease"]')) {
-    const idx = +target.getAttribute('data-idx');
-    if (cart[idx].quantity > 1) cart[idx].quantity--;
-    renderCart();
+  // Xử lý sự kiện tăng/giảm/xóa/nhập số lượng
+  function cartEventHandler(e) {
+    const target = e.target;
+    if (target.matches('[data-action="decrease"]')) {
+      const idx = +target.getAttribute('data-idx');
+      if (cart[idx].quantity > 1) cart[idx].quantity--;
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCart();
+    }
+    if (target.matches('[data-action="increase"]')) {
+      const idx = +target.getAttribute('data-idx');
+      cart[idx].quantity++;
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCart();
+    }
+    if (target.matches('[data-action="remove"]')) {
+      const idx = +target.getAttribute('data-idx');
+      cart.splice(idx, 1);
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCart();
+    }
+    if (target.matches('input[type="number"][data-idx]')) {
+      const idx = +target.getAttribute('data-idx');
+      let val = parseInt(target.value, 10);
+      if (isNaN(val) || val < 1) val = 1;
+      cart[idx].quantity = val;
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      renderCart();
+    }
   }
-  if (target.matches('[data-action="increase"]')) {
-    const idx = +target.getAttribute('data-idx');
-    cart[idx].quantity++;
-    renderCart();
-  }
-  if (target.matches('[data-action="remove"]')) {
-    const idx = +target.getAttribute('data-idx');
-    cart.splice(idx, 1);
-    renderCart();
-  }
-  if (target.matches('input[type="number"][data-idx]')) {
-    const idx = +target.getAttribute('data-idx');
-    let val = parseInt(target.value, 10);
-    if (isNaN(val) || val < 1) val = 1;
-    cart[idx].quantity = val;
-    renderCart();
-  }
-}
 
   function initCartPanel() {
     const cartBtn = document.getElementById('cartBtn');
@@ -304,6 +326,7 @@ function cartEventHandler(e) {
     cartItems.addEventListener('click', cartEventHandler);
     cartItems.addEventListener('change', cartEventHandler);
 
+    cart = JSON.parse(localStorage.getItem('cartItems') || '[]');
     renderCart();
   }
 
@@ -536,6 +559,18 @@ function loadHeaderFooter() {
       if (typeof initHeaderPanel === 'function') initHeaderPanel();
       if (typeof initCartPanel === 'function') initCartPanel();
       if (typeof initSearchBarButton === 'function') initSearchBarButton();
+      // Khởi tạo Wishlist sau khi header đã load
+      if (typeof initWishlistFeature === 'function') {
+        initWishlistFeature(); // <-- Đảm bảo gọi lại sau khi header được load
+      }
+
+      // Nếu vẫn cần gọi thủ công từng hàm (trường hợp lỗi tách biệt), gọi bổ sung như sau:
+      setTimeout(() => {
+        if (typeof window.renderWishlistPanel === 'function') window.renderWishlistPanel();
+        if (typeof window.updateWishlistCount === 'function') window.updateWishlistCount();
+      }, 100);
+
+      window.addEventListener('cartUpdated', renderCartPanel);
       // Add logout button handler and auth state management after header is loaded
       setTimeout(() => {
         // Remove any old event listeners to avoid stacking
@@ -643,3 +678,29 @@ loadHeaderFooter();
     }, 100);
   }
 })();
+
+function renderCartPanel() {
+  cart = JSON.parse(localStorage.getItem('cartItems') || '[]');
+  renderCart();
+}
+window.renderCartPanel = renderCartPanel;
+
+function updateCartBadge() {
+  const cart = JSON.parse(localStorage.getItem('cartItems') || '[]');
+  const cartBadge = document.querySelector('.cart-badge');
+  if (!cartBadge) return;
+
+  const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (totalQty > 0) {
+    cartBadge.textContent = totalQty;
+    cartBadge.classList.add('show');
+  } else {
+    cartBadge.textContent = '';
+    cartBadge.classList.remove('show');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', updateCartBadge);
+window.addEventListener('DOMContentLoaded', updateCartBadge);
+window.addEventListener('cartUpdated', updateCartBadge);
