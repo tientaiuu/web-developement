@@ -123,4 +123,34 @@ document.getElementById("confirm-payment-btn").addEventListener("click", functio
   const popup = document.getElementById("success-popup");
   popup.classList.remove("hidden");
   setTimeout(() => popup.classList.add("show"), 10);
+
+  // ===> BẮT ĐẦU GHI ĐƠN HÀNG
+  const cart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+  const today = new Date();
+  const orderDate = today.toLocaleDateString("vi-VN");
+  const timestamp = today.getTime();
+  const orderId = "ORD" + timestamp;
+
+  // Tính tổng
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.quantity;
+  });
+  const tax = Math.round(total * 0.135);
+  total += tax;
+
+  const newOrder = {
+    id: orderId,
+    date: orderDate,
+    status: "Đang giao hàng",
+    items: cart,
+    total: total
+  };
+
+  const allOrders = JSON.parse(localStorage.getItem("myOrders") || "[]");
+  allOrders.unshift(newOrder); // thêm lên đầu danh sách
+  localStorage.setItem("myOrders", JSON.stringify(allOrders));
+
+  // Option: Xoá giỏ hàng
+  localStorage.removeItem("cartItems");
 });
