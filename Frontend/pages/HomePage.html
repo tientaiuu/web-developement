@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Readify | Cửa hàng sách trực tuyến</title>
+  <meta name="title" content="Readify | Cửa hàng sách trực tuyến">
+
+
+  <link rel="shortcut icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="stylesheet" href="./assets/css/home.css">
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/home.js"></script>
+  <script src="../assets/js/callHeaderFooter.js"></script>
+
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#f5f5dc',
+            secondary: '#e6e6e6',
+            primarynavy: '#2d5aa0',
+            light: '#f8fafc',
+
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-light">
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            Bộ sưu tập bán chạy nhất
+          </div>
+
+          <h1 class="hero-title">Khám phá thế giới qua từng trang sách</h1>
+
+          <p class="hero-subtitle">
+            Readify - nơi những câu chuyện bắt đầu và trí tưởng tượng không có giới hạn.
+          </p>
+          <p class="hero-subtitle mt-2">
+            Khám phá hàng triệu cuốn sách, từ tiểu thuyết bán chạy nhất đến những viên ngọc ẩn.
+          </p>
+          <div class="hero-search">
+            <input type="text" class="search-input" placeholder="Tìm kiếm sách, tác giả hoặc thể loại...">
+            <button class="search-btn-hero">
+              <i class="ri-search-line mr-2"></i>
+              Tìm kiếm
+            </button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">1k+</span>
+              <span class="stat-label">Quyển sách</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Tác giả</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">5k+</span>
+              <span class="stat-label">Độc giả</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="featured-books">
+            <!-- Loading placeholder -->
+            <div class="book-card loading-placeholder">
+              <div class="book-cover bg-gray-200 animate-pulse">
+                <div class="w-full h-full bg-gray-300 rounded-t-md"></div>
+              </div>
+              <div class="book-info">
+                <div class="book-title bg-gray-200 h-4 mb-2 animate-pulse"></div>
+                <div class="book-author bg-gray-200 h-3 mb-2 animate-pulse"></div>
+                <div class="book-rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-text">...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</body>
+
+<!-- Features Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-['Lora'] font-bold text-gray-800 mb-4">Tại sao chọn Readify?</h2>
+      <p class="text-xl text-gray-600">Chúng tôi mang đến trải nghiệm đọc sách tốt nhất cho bạn</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center p-6">
+        <div class="w-16 h-16 bg-primarynavy rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="ri-truck-line ri-2x text-white"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Giao hàng miễn phí</h3>
+        <p class="text-gray-600">Miễn phí giao hàng cho đơn hàng từ 200.000₫</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="w-16 h-16 bg-primarynavy rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="ri-shield-check-line ri-2x text-white"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Đảm bảo chất lượng</h3>
+        <p class="text-gray-600">Sách chính hãng từ các nhà xuất bản uy tín</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="w-16 h-16 bg-primarynavy rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="ri-customer-service-2-line ri-2x text-white"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Hỗ trợ 24/7</h3>
+        <p class="text-gray-600">Đội ngũ hỗ trợ nhiệt tình, chuyên nghiệp</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Books Section -->
+<!-- <section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-['Lora'] font-bold text-gray-800 mb-4">Sách nổi bật</h2>
+      <p class="text-xl text-gray-600">Khám phá những cuốn sách được yêu thích nhất</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-stretch">
+      <!-- Loading placeholders will be replaced by dynamic content -->
+<!--<div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full loading-placeholder">
+        <div class="relative h-96 w-full flex-shrink-0 bg-gray-200 animate-pulse">
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="bg-gray-200 h-4 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-5 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-4 mb-3 animate-pulse"></div>
+          <div class="flex justify-between items-center mt-auto">
+            <div class="bg-gray-200 h-5 w-20 animate-pulse"></div>
+            <div class="bg-gray-200 h-8 w-24 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full loading-placeholder">
+        <div class="relative h-96 w-full flex-shrink-0 bg-gray-200 animate-pulse">
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="bg-gray-200 h-4 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-5 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-4 mb-3 animate-pulse"></div>
+          <div class="flex justify-between items-center mt-auto">
+            <div class="bg-gray-200 h-5 w-20 animate-pulse"></div>
+            <div class="bg-gray-200 h-8 w-24 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full loading-placeholder">
+        <div class="relative h-96 w-full flex-shrink-0 bg-gray-200 animate-pulse">
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="bg-gray-200 h-4 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-5 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-4 mb-3 animate-pulse"></div>
+          <div class="flex justify-between items-center mt-auto">
+            <div class="bg-gray-200 h-5 w-20 animate-pulse"></div>
+            <div class="bg-gray-200 h-8 w-24 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded shadow-sm overflow-hidden flex flex-col h-full loading-placeholder">
+        <div class="relative h-96 w-full flex-shrink-0 bg-gray-200 animate-pulse">
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="bg-gray-200 h-4 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-5 mb-2 animate-pulse"></div>
+          <div class="bg-gray-200 h-4 mb-3 animate-pulse"></div>
+          <div class="flex justify-between items-center mt-auto">
+            <div class="bg-gray-200 h-5 w-20 animate-pulse"></div>
+            <div class="bg-gray-200 h-8 w-24 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-12">
+      <a href="books"
+        class="inline-block bg-white text-gray-800 px-8 py-3 font-medium !rounded-button whitespace-nowrap border border-gray-200">Xem
+        tất cả sách</a>
+    </div>
+  </div>
+</section> -->
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-['Lora'] font-bold text-gray-800 mb-4">Khách hàng nói gì về chúng tôi?</h2>
+      <p class="text-xl text-gray-600">Trải nghiệm của độc giả tại Readify</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-gray-50 p-6 rounded">
+        <div class="flex items-center mb-4">
+          <img
+            src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20young%20Vietnamese%20woman%20in%20business%20attire%20with%20a%20warm%20smile&width=100&height=100&seq=11&orientation=squarish"
+            alt="Nguyễn Thị Minh Tâm" class="w-9 h-9 rounded-full object-cover">
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800">Nguyễn Thị Minh Tâm</h4>
+            <p class="text-gray-500">Giáo viên</p>
+          </div>
+        </div>
+        <p class="text-gray-600">"Tôi rất hài lòng với chất lượng sách và dịch vụ tại Readify. Giao hàng nhanh chóng và
+          sách được đóng gói cẩn thận."</p>
+      </div>
+      <div class="bg-gray-50 p-6 rounded">
+        <div class="flex items-center mb-4">
+          <img
+            src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20middle-aged%20Vietnamese%20man%20wearing%20glasses%20with%20a%20confident%20expression&width=100&height=100&seq=12&orientation=squarish"
+            alt="Trần Văn Quang" class="w-9 h-9 rounded-full object-cover">
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800">Trần Văn Quang</h4>
+            <p class="text-gray-500">Kỹ sư phần mềm</p>
+          </div>
+        </div>
+        <p class="text-gray-600">"Readify có bộ sưu tập sách công nghệ rất phong phú. Tôi thường xuyên mua sách ở đây để
+          cập nhật kiến thức mới."</p>
+      </div>
+      <div class="bg-gray-50 p-6 rounded">
+        <div class="flex items-center mb-4">
+          <img
+            src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20young%20Vietnamese%20woman%20with%20long%20black%20hair%20and%20natural%20makeup&width=100&height=100&seq=13&orientation=squarish"
+            alt="Phạm Thu Hương" class="w-9 h-9 rounded-full object-cover">
+          <div class="ml-4">
+            <h4 class="font-semibold text-gray-800">Phạm Thu Hương</h4>
+            <p class="text-gray-500">Nhà văn</p>
+          </div>
+        </div>
+        <p class="text-gray-600">"Là một người yêu sách, tôi rất ấn tượng với cách Readify chăm sóc từng cuốn sách và
+          khách hàng của mình."</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Newsletter -->
+<section class="bg-white py-10 border-t">
+  <div class="container mx-auto px-4">
+    <div class="max-w-xl mx-auto text-center mb-8">
+      <h2 class="text-3xl font-['Playfair_Display'] font-semibold text-gray-800 mb-3">Đăng ký nhận bản tin</h2>
+      <p class="text-gray-600 text-lg">Nhận thông tin cập nhật về sách mới nhất</p>
+    </div>
+    <div class="max-w-md mx-auto">
+      <form class="flex">
+        <input type="email" placeholder="Nhập email của bạn"
+          class="flex-1 px-4 py-3 border border-gray-300 rounded-l focus:outline-none focus:ring-1 focus:ring-primary">
+        <button type="submit"
+          class="bg-primarynavy text-white px-6 py-3 font-medium !rounded-r-button whitespace-nowrap">Đăng ký</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer-placeholder"></div>
+
+
+</body>
+
+</html>

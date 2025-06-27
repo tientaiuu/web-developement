@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Readify - Đơn hàng gần đây</title>
+  <link rel="shortcut icon" href="assets/images/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="./assets/css/my_order.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="../assets/js/callHeaderFooter.js"></script>
+  <script src="../assets/js/auth.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#f5f5dc',
+            secondary: '#e6e6e6',
+            primarynavy: '#2d5aa0'
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            DEFAULT: '8px',
+            'md': '12px',
+            'lg': '16px',
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px',
+            'full': '9999px',
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="min-h-screen bg-light">
+    <main class="my-container main-content">
+      <h1>Đơn hàng gần đây</h1>
+      <div class="table-wrapper">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Mã Đơn</th>
+              <th>Sách</th>
+              <th>Ngày đặt</th>
+              <th>Trạng thái</th>
+              <th class="text-right">Tổng tiền</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal chi tiết đơn hàng -->
+  <div id="orderModal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-inner">
+        <div class="card">
+          <div class="card-content">
+            <div class="modal-header">
+              <h1>Mã: </h1>
+              <div class="modal-meta">
+                <span>Ngày đặt <strong></strong></span>
+                <div class="modal-status">
+                  <div class="circle success"></div>
+                  <span class="status-text"></span>
+                </div>
+              </div>
+            </div>
+            <div class="products"></div>
+            <div class="delivery">
+              <h3>Giao hàng</h3>
+              <p>Địa chỉ: </p>
+            </div>
+            <hr class="separator" />
+            <div class="summary">
+              <h3>Tổng thanh toán</h3>
+              <div class="row"><span>Giá gốc</span><span></span></div>
+              <div class="row"><span>Giảm giá</span><span>0đ</span></div>
+              <div class="row"><span>Phí giao hàng</span><span>0đ</span></div>
+              <hr class="separator" />
+              <div class="row total"><span>Tổng cộng</span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    let orders = [];
+
+    function getDeliveryDate(dateString) {
+      const [day, month, year] = dateString.split("/").map(Number);
+      const date = new Date(year, month - 1, day);
+      date.setDate(date.getDate() + 5);
+      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    }
+
+    function openModal(order) {
+      document.getElementById("orderModal").classList.remove("hidden");
+      document.querySelector(".modal-header h1").textContent = "Mã: " + order.id;
+      document.querySelector(".modal-meta strong").textContent = order.date;
+      document.querySelector(".status-text").textContent = "Dự kiến nhận hàng: " + getDeliveryDate(order.date);
+
+      const products = document.querySelector(".products");
+      products.innerHTML = "";
+      order.items.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "product";
+        el.innerHTML = `
+          <div class="thumb"><img src="${item.image}" alt="${item.title}"></div>
+          <div class="details"><h3>${item.title}</h3></div>
+          <div class="price">
+            <strong>${item.price.toLocaleString("vi-VN")}đ</strong>
+            <div class="qty">Số lượng: ${item.quantity}</div>
+          </div>
+        `;
+        products.appendChild(el);
+      });
+
+      const shippingInfo = JSON.parse(localStorage.getItem("shippingInfo")) || {};
+      const addressList = JSON.parse(localStorage.getItem("deliveryAddresses")) || [];
+      let fullAddress = "Không rõ";
+      const idx = parseInt(shippingInfo.addressIndex);
+      if (!isNaN(idx) && addressList[idx]) {
+        const a = addressList[idx];
+        fullAddress = `${a.detail}, ${a.ward}, ${a.district}, ${a.province}`;
+      }
+      document.querySelector(".delivery p").textContent = "Địa chỉ: " + fullAddress;
+
+      const total = order.total || 0;
+      const rows = document.querySelectorAll(".summary .row");
+        if (rows.length >= 4) {
+          // Giá gốc (trước thuế)
+          const rawTotal = order.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+          rows[0].querySelector("span:last-child").textContent = rawTotal.toLocaleString("vi-VN") + "đ";
+
+          // Giảm giá (nếu bạn có logic)
+          rows[1].querySelector("span:last-child").textContent = "0đ";
+
+          // Phí giao hàng
+          rows[2].querySelector("span:last-child").textContent = "0đ";
+
+          // Tổng cộng (có thuế)
+          rows[3].querySelector("span:last-child").textContent = order.total.toLocaleString("vi-VN") + "đ";
+        }
+    }
+
+    function closeModal() {
+      document.getElementById("orderModal").classList.add("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      orders = JSON.parse(localStorage.getItem("myOrders") || "[]");
+      const tbody = document.querySelector(".order-table tbody");
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">Không có đơn hàng nào.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = "";
+      orders.forEach((order, index) => {
+        const booksHTML = order.items.map(item => `
+          <div class="flex gap-2 mb-2">
+            <img src="${item.image}" alt="${item.title}" class="w-10 h-14 object-cover rounded" />
+            <div>
+              <div class="font-medium">${item.title}</div>
+              <div class="text-sm text-gray-500">${item.price.toLocaleString("vi-VN")}đ × ${item.quantity}</div>
+            </div>
+          </div>
+        `).join("");
+
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-index", index);
+        tr.innerHTML = `
+          <td><input type="checkbox" /></td>
+          <td>${order.id}</td>
+          <td><div class="flex flex-col">${booksHTML}</div></td>
+          <td>${order.date}</td>
+          <td><a href="javascript:void(0);" class="status-link text-[#2d5aa0] hover:underline">${order.status}</a></td>
+          <td class="text-right">${order.total.toLocaleString("vi-VN")} đ</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll(".status-link").forEach(link => {
+        link.addEventListener("click", function () {
+          const tr = link.closest("tr");
+          const index = tr.getAttribute("data-index");
+          const order = orders[index];
+          openModal(order);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

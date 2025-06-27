@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thông tin cá nhân</title>
+  <link rel="shortcut icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="./assets/js/callHeaderFooter.js"></script>
+  <link rel="stylesheet" href="./assets/css/settingA.css" />
+  <script src="../assets/js/auth.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <!-- Trang thông tin cá nhân -->
+  <div class="profile-page">
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="profile">
+          <div class="avatar">
+            <img src="https://img.freepik.com/freie-psd/3d-darstellung-eines-menschlichen-avatars-oder-profils_23-2150671142.jpg" alt="Profile" />
+          </div>
+          <h2 id="sidebar-name">User</h2>
+        </div>
+        <nav class="nav-links">
+          <div class="nav-item active" data-target="account-section"><i class="ri-user-line"></i> Tài khoản</div>
+          <div class="nav-item" data-target="delivery-section"><i class="ri-map-pin-line"></i> Địa chỉ giao hàng</div>
+          <div class="nav-item" data-target="security-section"><i class="ri-shield-line"></i> Bảo mật</div>
+        </nav>
+      </aside>
+
+      <!-- Nội dung chính -->
+      <main class="main-content">
+        <!-- Thông tin tài khoản -->
+        <div id="account-section" class="content-section">
+          <div class="card">
+            <div class="card-content">
+              <section class="section">
+                <h1 class="section-title">Thông tin cá nhân</h1>
+                <div class="info-grid">
+                  <div class="photo-section">
+                    <label>Ảnh đại diện</label>
+                    <div class="photo-preview">
+                      <img id="avatar-preview" src="https://img.freepik.com/freie-psd/3d-darstellung-eines-menschlichen-avatars-oder-profils_23-2150671142.jpg" alt="Profile" />
+                    </div>
+                    <div class="photo-buttons">
+                      <button class="btn btn-primary" onclick="document.getElementById('avatar-input').click()">Đổi</button>
+                      <button class="btn btn-secondary" onclick="removeAvatar()">Xóa</button>
+                      <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="changeAvatar(event)">
+                    </div>
+                  </div>
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label>Tên</label>
+                      <input type="text" id="input-name" placeholder="Nguyễn Văn A" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Giới tính</label>
+                      <select id="input-gender">
+                        <option value="">Chọn</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label>Ngày sinh</label>
+                      <input type="text" id="birthdate" placeholder="dd/mm/yyyy" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" id="input-email" placeholder="abc@example.com" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Số điện thoại</label>
+                      <input type="tel" id="input-phone" placeholder="0123 xxx xxx" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Địa chỉ</label>
+                      <select id="selected-address" class="form-select">
+                        <option value="">Chọn địa chỉ đã lưu</option>
+                      </select>
+                    </div>
+                    
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <h1 class="section-title">Thông tin tài chính</h1>
+                <div class="financial-info">
+                  <div class="debt-info">
+                    <label>Nợ hiện tại</label>
+                    <div class="debt-amount" id="debt-amount">0 VNĐ</div>
+                  </div>
+                  <div class="invoice-summary">
+                    <div class="invoice-stats">
+                      <div class="stat-item">
+                        <span class="stat-label">Hóa đơn bán hàng</span>
+                        <span class="stat-value" id="sales-invoices-count">0</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-label">Hóa đơn thuê sách</span>
+                        <span class="stat-value" id="rental-invoices-count">0</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <h1 class="section-title">Thông báo email</h1>
+                <div class="notifications-grid">
+                  <div class="notification-item"><input type="checkbox" id="cb1" /><label for="cb1">Sách mới</label></div>
+                  <div class="notification-item"><input type="checkbox" id="cb2" /><label for="cb2">Thay đổi mật khẩu</label></div>
+                  <div class="notification-item"><input type="checkbox" id="cb3" /><label for="cb3">Ưu đãi mới</label></div>
+                  <div class="notification-item"><input type="checkbox" id="cb4" /><label for="cb4">Cung cấp đặc biệt</label></div>
+                  <div class="notification-item"><input type="checkbox" id="cb5" /><label for="cb5">Trạng thái đơn hàng</label></div>
+                  <div class="notification-item"><input type="checkbox" id="cb6" /><label for="cb6">Phản hồi mới</label></div>
+                </div>
+
+                <div class="actions">
+                  <button class="btn btn-outline">Bỏ qua</button>
+                  <button onclick="saveUserInfo()" class="btn btn-primary">Lưu</button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <!-- Địa chỉ giao hàng -->
+        <div id="delivery-section" class="content-section hidden">
+          <div class="card">
+            <div class="card-content">
+              <h1 class="section-title">Địa chỉ giao hàng</h1>
+              <h2 class="subsection-title">Địa chỉ giao hàng tồn tại</h2>
+              <div id="address-list" class="existing-addresses grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- JS sẽ render địa chỉ vào đây -->
+              </div>
+              <!-- Địa chỉ mẫu... -->
+              <h2 class="subsection-title">Địa chỉ giao hàng mới</h2>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div>
+                  <label class="block text-sm text-[#292d32] mb-2">Quốc gia</label>
+                  <select class="form-select"><option>Việt Nam</option></select>
+                </div>
+                <div>
+                  <label class="block text-sm text-[#292d32] mb-2">Thành phố/ Tỉnh</label>
+                  <select id="province" class="form-select"><option value="">Chọn tỉnh/thành</option></select>
+                </div>
+                <div>
+                  <label class="block text-sm text-[#292d32] mb-2">Quận/ Huyện</label>
+                  <select id="district" class="form-select"><option value="">Chọn quận/huyện</option></select>
+                </div>
+                <div>
+                  <label class="block text-sm text-[#292d32] mb-2">Phường/ xã</label>
+                  <select id="ward" class="form-select"><option value="">Chọn phường/xã</option></select>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div><label>Địa chỉ chi tiết</label><input type="text" class="form-input" placeholder="Nhập địa chỉ chi tiết" /></div>
+                <div><label>Ghi chú</label><input type="text" class="form-input" placeholder="Ghi chú thêm (tùy chọn)" /></div>
+              </div>
+              <div class="flex justify-end mt-6"><button class="add-btn">Thêm địa chỉ mới</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bảo mật -->
+        <div id="security-section" class="content-section hidden">
+          <div class="card">
+            <div class="card-content">
+              <h1 class="section-title">Bảo mật</h1>
+              <div class="mb-12">
+                <label for="phone">Số điện thoại</label>
+                <div class="flex gap-4"><input type="tel" id="phone" class="flex-1" /><button class="btn btn-primary">Bật</button></div>
+              </div>
+              <div>
+                <label>Mật khẩu cũ</label><input type="password" />
+                <label>Mật khẩu mới</label><input type="password" />
+                <label>Xác nhận mật khẩu</label><input type="password" />
+              </div>
+              <div class="flex justify-end mt-8"><button class="btn btn-primary">Thay đổi mật khẩu</button></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="./assets/js/settingA.js"></script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+.profile-page {
+  background-color: #f5faff;
+  padding-top: 140px;
+  min-height: 100vh;
+}
+
+
+.profile-page .container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.profile-page .sidebar {
+  width: 320px;
+  background: white;
+  padding: 24px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.profile-page .profile {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.profile-page .avatar {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid black;
+}
+
+.profile-page .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-page .profile h2 {
+  font-size: 1.25rem;
+  color: #292d32;
+}
+
+.profile-page .nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-page .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #292d32;
+}
+
+.profile-page .nav-item:hover {
+  background: #f9fafb;
+}
+
+.profile-page .main-content {
+  flex: 1;
+  padding: 32px;
+}
+
+.profile-page .card {
+  max-width: 960px;
+  margin: auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.profile-page .card-content {
+  padding: 32px;
+}
+
+.profile-page .section {
+  margin-bottom: 48px;
+}
+
+.profile-page .section h1,
+.profile-page .section h2 {
+  font-size: 1.5rem;
+  color: #292d32;
+  margin-bottom: 24px;
+}
+
+.profile-page .info-grid {
+  display: flex;
+  gap: 32px;
+}
+
+.profile-page .photo-section {
+  text-align: center;
+}
+
+.profile-page .photo-section label {
+  display: block;
+  margin-bottom: 8px;
+  color: #292d32;
+}
+
+.profile-page .photo-preview {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #d9d9d9;
+  margin: 0 auto 16px;
+}
+
+.profile-page .photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-page .photo-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.profile-page .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  flex: 1;
+}
+
+.profile-page .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #292d32;
+}
+
+.profile-page input,
+.profile-page select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+
+.profile-page input:focus,
+.profile-page select:focus {
+  outline: none;
+  border-color: #5195ff;
+}
+
+.profile-page .notifications-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 280px); /* 2 cột cố định */
+  gap: 20px 80px; /* row gap, column gap */
+}
+
+.profile-page .notification-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px; /* 👈 cố định chiều cao mỗi dòng */
+}
+
+.profile-page .notification-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.profile-page .notification-item label {
+  font-size: 1rem;
+  color: #292d32;
+  white-space: nowrap; /* 👈 không xuống hàng */
+  cursor: pointer;
+}
+
+.profile-page .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.profile-page .btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.profile-page .btn-primary {
+  background-color: #2d5aa0;
+  color: white;
+}
+
+.profile-page .btn-primary:hover {
+  background-color: #264a84;
+}
+
+.profile-page .btn-secondary {
+  background-color: #5195ff;
+  color: white;
+}
+
+.profile-page .btn-secondary:hover {
+  background-color: #3b7de0;
+}
+
+.profile-page .btn-outline {
+  border: 1px solid #5195ff;
+  color: #5195ff;
+  background: white;
+}
+
+.profile-page .btn-outline:hover {
+  background-color: #5195ff;
+  color: white;
+}
+
+
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* === HEADER STYLE TỪ FILE GỐC === */
+
+/* Biến màu và font cơ bản cho header */
+:root {
+  --primary-navy: #1a365d;
+  --primary-blue: #2d5aa0;
+  --accent-gold: #d4af37;
+  --accent-warm: #f7931e;
+  --text-dark: #2d3748;
+  --text-medium: #4a5568;
+  --text-light: #718096;
+  --bg-light: #f8fafc;
+  --border-light: #e2e8f0;
+
+  --font-primary: 'Montserrat', sans-serif;
+  --font-display: 'Playfair Display', serif;
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* Tổng thể */
+body {
+  font-family: var(--font-primary);
+  color: var(--text-dark);
+  background-color: #ffffff;
+}
+
+/* Logo Readify */
+.logo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--primary-navy);
+  text-decoration: none;
+}
+
+/* Nav menu */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+}
+
+.nav-link {
+  color: var(--text-medium);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--primary-blue);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-gold);
+  transition: var(--transition-normal);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Header actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-btn,
+.cart-btn,
+.user-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-medium);
+  transition: var(--transition-fast);
+  border-radius: 8px;
+}
+
+.search-btn:hover,
+.cart-btn:hover,
+.user-btn:hover {
+  background: var(--bg-light);
+  color: var(--primary-blue);
+}
+
+/* Cart badge (số lượng) */
+.cart-badge {
+  position: relative;
+}
+
+.cart-badge::after {
+  content: '0';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent-warm);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.header.scrolled {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light); /* viền phân cách */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);     /* bóng nhẹ */
+  z-index: 1000;
+  transition: var(--transition-normal);
+}
+
+.profile-page {
+  padding-top: 76px !important;;
+}
+
+.hidden {
+  display: none;
+}
+.nav-item.active {
+  color: #2d5aa0;
+  background-color: #f9fafb;
+  font-weight: bold;
+}
+
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  background-color: #f5faff;
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #292d32;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+
+.menu-btn:hover {
+  background-color: #f9fafb;
+}
+
+.menu-btn.active {
+  background-color: #e8e7e7;
+  color: #000;
+  font-weight: 600;
+}
+
+.address-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+  min-height: 120px;
+  max-width: 100%;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #e7424c;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.x-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.add-btn {
+  padding: 10px 24px;
+  background-color: #2d5aa0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background-color: #22215b;
+}
+
+.existing-addresses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* linh hoạt nhưng đều */
+  gap: 24px;
+}
+
+/* Tiêu đề chính */
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.875rem; /* text-3xl = 30px */
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+/* Tiêu đề phụ */
+.subsection-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.125rem; /* text-lg = 18px */
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+/* Financial info */
+.financial-info {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.debt-info {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 2px solid #fca5a5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.debt-info label {
+  display: block;
+  font-weight: 600;
+  color: #7f1d1d;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.debt-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.invoice-summary {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.invoice-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
