@@ -3,8 +3,10 @@ const CartService = require('../services/cart.service');
 const CartController = {
     async addToCart(req, res) {
         try {
-            const userId = req.user.id;
-            const { item } = req.body
+                    const userId = req.user.id;
+        const { bookId, quantity, type } = req.body
+        console.log(req.body)
+        const item = { bookId, quantity, type }
 
             const result = await CartService.createOrUpdate(userId, item);
             res.json({
@@ -46,7 +48,7 @@ const CartController = {
     async getItems(req, res) {
         try {
             const userId = req.user.id;
-            const { type } = req.body;
+            const type = req.params.type;
 
             const cartItems = await CartService.getItems(userId, type);
             res.json(cartItems);

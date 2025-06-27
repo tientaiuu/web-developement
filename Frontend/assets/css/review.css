@@ -60,39 +60,24 @@
 }
 
 .bg-primarynavy {
-  background-color: #2d5aa0 ;
-  color: #fff ;
+  background-color: #2d5aa0 !important;
+  color: #fff !important;
 }
 .hover\:bg-primary:hover {
-  background-color: transparent ;
-  color: inherit ;
+  background-color: transparent !important;
+  color: inherit !important;
 }
 
 /* Chỉ áp dụng nền trong suốt cho nút Khám phá ngay */
 .btn-discover.bg-primarynavy {
-  background-color: transparent ;
-  color: #fff ;
+  background-color: transparent !important;
+  color: #fff !important;
 }
 .btn-discover.hover\:bg-primary:hover {
-  background-color: transparent ;
-  color: #fff ;
+  background-color: transparent !important;
+  color: #fff !important;
 }
 .insight-card .insight-number {
   color: #3c48f8; 
 }
 
- /* Khôi phục hiệu ứng mặc định của home.css cho các nút header */
-    .search-btn, .cart-btn, .user-btn {
-      background: none;
-      border: none;
-      padding: 8px;
-      cursor: pointer;
-      color: #4a5568;
-      transition: 0.15s ease;
-      border-radius: 8px;
-    }
-    .search-btn:hover, .cart-btn:hover, .user-btn:hover {
-      background: #2d5aa0 !important;
-      color: #ffff !important;
-    }
- 

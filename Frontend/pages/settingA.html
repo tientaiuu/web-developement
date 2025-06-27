@@ -10,7 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <link rel="stylesheet" href="../assets/css/settingA.css" />
+  <script src="./assets/js/callHeaderFooter.js"></script>
+  <link rel="stylesheet" href="./assets/css/settingA.css" />
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 </head>
 <body>
@@ -61,13 +66,8 @@
                     </div>
 
                     <div class="form-group">
-                      <label>Email</label>
-                      <input type="email" id="input-email" placeholder="abc@example.com" />
-                    </div>
-
-                    <div class="form-group">
                       <label>Giới tính</label>
-                      <select id="input-sex">
+                      <select id="input-gender">
                         <option value="">Chọn</option>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
@@ -76,18 +76,25 @@
                     </div>
 
                     <div class="form-group">
+                      <label>Ngày sinh</label>
+                      <input type="text" id="birthdate" placeholder="dd/mm/yyyy" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" id="input-email" placeholder="abc@example.com" />
+                    </div>
+
+                    <div class="form-group">
                       <label>Số điện thoại</label>
                       <input type="tel" id="input-phone" placeholder="0123 xxx xxx" />
                     </div>
 
                     <div class="form-group">
-                      <label>Ngày sinh</label>
-                      <input type="date" id="input-birthday" />
-                    </div>
-
-                    <div class="form-group">
                       <label>Địa chỉ</label>
-                      <input type="text" id="input-address" placeholder="Nhập địa chỉ của bạn" />
+                      <select id="selected-address" class="form-select">
+                        <option value="">Chọn địa chỉ đã lưu</option>
+                      </select>
                     </div>
                     
                   </div>
@@ -141,120 +148,35 @@
           <div class="card">
             <div class="card-content">
               <h1 class="section-title">Địa chỉ giao hàng</h1>
-              
-              <!-- Chọn địa chỉ -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <h2 class="subsection-title">Địa chỉ giao hàng tồn tại</h2>
+              <div id="address-list" class="existing-addresses grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- JS sẽ render địa chỉ vào đây -->
+              </div>
+              <!-- Địa chỉ mẫu... -->
+              <h2 class="subsection-title">Địa chỉ giao hàng mới</h2>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div>
                   <label class="block text-sm text-[#292d32] mb-2">Quốc gia</label>
-                  <select id="country" class="form-select" onchange="updateAddress()">
-                    <option value="Việt Nam">Việt Nam</option>
-                  </select>
+                  <select class="form-select"><option>Việt Nam</option></select>
                 </div>
                 <div>
                   <label class="block text-sm text-[#292d32] mb-2">Thành phố/ Tỉnh</label>
-                  <select id="province" class="form-select" onchange="updateAddress()">
-                    <option value="">Chọn tỉnh/thành</option>
-                    <option value="Hà Nội">Hà Nội</option>
-                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                    <option value="Đà Nẵng">Đà Nẵng</option>
-                    <option value="Hải Phòng">Hải Phòng</option>
-                    <option value="Cần Thơ">Cần Thơ</option>
-                    <option value="An Giang">An Giang</option>
-                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
-                    <option value="Bắc Giang">Bắc Giang</option>
-                    <option value="Bắc Kạn">Bắc Kạn</option>
-                    <option value="Bạc Liêu">Bạc Liêu</option>
-                    <option value="Bắc Ninh">Bắc Ninh</option>
-                    <option value="Bến Tre">Bến Tre</option>
-                    <option value="Bình Định">Bình Định</option>
-                    <option value="Bình Dương">Bình Dương</option>
-                    <option value="Bình Phước">Bình Phước</option>
-                    <option value="Bình Thuận">Bình Thuận</option>
-                    <option value="Cà Mau">Cà Mau</option>
-                    <option value="Cao Bằng">Cao Bằng</option>
-                    <option value="Đắk Lắk">Đắk Lắk</option>
-                    <option value="Đắk Nông">Đắk Nông</option>
-                    <option value="Điện Biên">Điện Biên</option>
-                    <option value="Đồng Nai">Đồng Nai</option>
-                    <option value="Đồng Tháp">Đồng Tháp</option>
-                    <option value="Gia Lai">Gia Lai</option>
-                    <option value="Hà Giang">Hà Giang</option>
-                    <option value="Hà Nam">Hà Nam</option>
-                    <option value="Hà Tĩnh">Hà Tĩnh</option>
-                    <option value="Hải Dương">Hải Dương</option>
-                    <option value="Hậu Giang">Hậu Giang</option>
-                    <option value="Hòa Bình">Hòa Bình</option>
-                    <option value="Hưng Yên">Hưng Yên</option>
-                    <option value="Khánh Hòa">Khánh Hòa</option>
-                    <option value="Kiên Giang">Kiên Giang</option>
-                    <option value="Kon Tum">Kon Tum</option>
-                    <option value="Lai Châu">Lai Châu</option>
-                    <option value="Lâm Đồng">Lâm Đồng</option>
-                    <option value="Lạng Sơn">Lạng Sơn</option>
-                    <option value="Lào Cai">Lào Cai</option>
-                    <option value="Long An">Long An</option>
-                    <option value="Nam Định">Nam Định</option>
-                    <option value="Nghệ An">Nghệ An</option>
-                    <option value="Ninh Bình">Ninh Bình</option>
-                    <option value="Ninh Thuận">Ninh Thuận</option>
-                    <option value="Phú Thọ">Phú Thọ</option>
-                    <option value="Phú Yên">Phú Yên</option>
-                    <option value="Quảng Bình">Quảng Bình</option>
-                    <option value="Quảng Nam">Quảng Nam</option>
-                    <option value="Quảng Ngãi">Quảng Ngãi</option>
-                    <option value="Quảng Ninh">Quảng Ninh</option>
-                    <option value="Quảng Trị">Quảng Trị</option>
-                    <option value="Sóc Trăng">Sóc Trăng</option>
-                    <option value="Sơn La">Sơn La</option>
-                    <option value="Tây Ninh">Tây Ninh</option>
-                    <option value="Thái Bình">Thái Bình</option>
-                    <option value="Thái Nguyên">Thái Nguyên</option>
-                    <option value="Thanh Hóa">Thanh Hóa</option>
-                    <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
-                    <option value="Tiền Giang">Tiền Giang</option>
-                    <option value="Trà Vinh">Trà Vinh</option>
-                    <option value="Tuyên Quang">Tuyên Quang</option>
-                    <option value="Vĩnh Long">Vĩnh Long</option>
-                    <option value="Vĩnh Phúc">Vĩnh Phúc</option>
-                    <option value="Yên Bái">Yên Bái</option>
-                  </select>
+                  <select id="province" class="form-select"><option value="">Chọn tỉnh/thành</option></select>
                 </div>
-              </div>
-              
-              <!-- Nhập thông tin địa chỉ chi tiết -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                   <label class="block text-sm text-[#292d32] mb-2">Quận/ Huyện</label>
-                  <input type="text" id="district" class="form-input" placeholder="VD: Quận 1, Huyện Gia Lâm..." oninput="updateAddress()" />
+                  <select id="district" class="form-select"><option value="">Chọn quận/huyện</option></select>
                 </div>
                 <div>
-                  <label class="block text-sm text-[#292d32] mb-2">Phường/ Xã</label>
-                  <input type="text" id="ward" class="form-input" placeholder="VD: Phường Bến Nghé, Xã Yên Viên..." oninput="updateAddress()" />
+                  <label class="block text-sm text-[#292d32] mb-2">Phường/ xã</label>
+                  <select id="ward" class="form-select"><option value="">Chọn phường/xã</option></select>
                 </div>
               </div>
-              
-              <!-- Địa chỉ số nhà và chi tiết -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label class="block text-sm text-[#292d32] mb-2">Số nhà, tên đường</label>
-                  <input type="text" id="street-detail" class="form-input" placeholder="VD: 123 Nguyễn Văn A" onchange="updateAddress()" />
-                </div>
-                <div>
-                  <label class="block text-sm text-[#292d32] mb-2">Ghi chú</label>
-                  <input type="text" id="address-note" class="form-input" placeholder="Ghi chú thêm (tùy chọn)" />
-                </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div><label>Địa chỉ chi tiết</label><input type="text" class="form-input" placeholder="Nhập địa chỉ chi tiết" /></div>
+                <div><label>Ghi chú</label><input type="text" class="form-input" placeholder="Ghi chú thêm (tùy chọn)" /></div>
               </div>
-              
-              <!-- Địa chỉ hoàn chỉnh -->
-              <div class="form-group mb-6">
-                <label class="block text-sm text-[#292d32] mb-2">Địa chỉ hoàn chỉnh</label>
-                <textarea id="full-address" rows="3" class="form-input" placeholder="Địa chỉ sẽ được tự động tạo khi bạn chọn các trường trên" readonly></textarea>
-              </div>
-              
-              <div class="actions">
-                <button class="btn btn-outline">Bỏ qua</button>
-                <button onclick="saveDeliveryAddress()" class="btn btn-primary">Lưu địa chỉ</button>
-              </div>
+              <div class="flex justify-end mt-6"><button class="add-btn">Thêm địa chỉ mới</button></div>
             </div>
           </div>
         </div>
@@ -263,28 +185,17 @@
         <div id="security-section" class="content-section hidden">
           <div class="card">
             <div class="card-content">
-              <h1 class="section-title">Đổi mật khẩu</h1>
-              <div class="space-y-4">
-                <!-- Hidden dummy inputs to prevent autofill -->
-                <input type="text" style="display:none;" />
-                <input type="password" style="display:none;" />
-                
-                <div class="form-group">
-                  <label for="current-password">Mật khẩu cũ</label>
-                  <input type="password" id="current-password" name="current-password" placeholder="Nhập mật khẩu hiện tại" autocomplete="off" data-lpignore="true" />
-                </div>
-                <div class="form-group">
-                  <label for="new-password">Mật khẩu mới</label>
-                  <input type="password" id="new-password" name="new-password" placeholder="Nhập mật khẩu mới" autocomplete="new-password" />
-                </div>
-                <div class="form-group">
-                  <label for="confirm-password">Xác nhận mật khẩu</label>
-                  <input type="password" id="confirm-password" name="confirm-password" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password" />
-                </div>
+              <h1 class="section-title">Bảo mật</h1>
+              <div class="mb-12">
+                <label for="phone">Số điện thoại</label>
+                <div class="flex gap-4"><input type="tel" id="phone" class="flex-1" /><button class="btn btn-primary">Bật</button></div>
               </div>
-              <div class="flex justify-end mt-8">
-                <button class="btn btn-primary" onclick="handleChangePassword()">Thay đổi mật khẩu</button>
+              <div>
+                <label>Mật khẩu cũ</label><input type="password" />
+                <label>Mật khẩu mới</label><input type="password" />
+                <label>Xác nhận mật khẩu</label><input type="password" />
               </div>
+              <div class="flex justify-end mt-8"><button class="btn btn-primary">Thay đổi mật khẩu</button></div>
             </div>
           </div>
         </div>
@@ -292,13 +203,6 @@
     </div>
   </div>
 
-  <div id="footer-placeholder"></div>
-
-  <!-- Load scripts in correct order -->
-  <script src="./assets/js/api.js"></script>
-  <script src="./assets/js/auth.js"></script>
-  <script src="./assets/js/callHeaderFooter.js"></script>
   <script src="./assets/js/settingA.js"></script>
 </body>
 </html>
-

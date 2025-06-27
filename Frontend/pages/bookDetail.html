@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <link rel="stylesheet" href="../assets/css/home.css">
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
   <script src="../assets/js/home.js"></script>
   <script src="../assets/js/callHeaderFooter.js"></script>
   <script>
@@ -64,6 +66,8 @@
       color: #f59e0b;
       border: 1.5px solid #f5f5dc;
       transition: background 0.2s, color 0.2s, border 0.2s;
+      cursor: pointer;
+      pointer-events: auto;
     }
 
     .add-to-cart-btn {
@@ -103,632 +107,946 @@
       margin-top: 32px;
     }
 
-    /* Thêm khoảng cách giữa header và thân */
-    .main-content {
-      margin-top: 96px;
+    .loading-spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #2d5aa0;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error-message {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .stock-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .stock-badge.in-stock {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .stock-badge.low-stock {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .stock-badge.out-of-stock {
+      background: #fee2e2;
+      color: #dc2626;
     }
   </style>
 </head>
 
 <body class="bg-light">
   <div id="header-placeholder"></div>
-  <main class="container mx-auto px-4 py-12 main-content">
-    <div class="flex flex-col md:flex-row gap-12">
-      <div class="md:w-2/5 flex justify-center items-start">
-        <img id="bookImage" src="" alt="Book cover"
-          class="book-cover-detail w-[320px] h-[480px] md:w-[340px] md:h-[520px]" />
-      </div>
-      <div class="md:w-3/5 flex flex-col gap-4">
-        <div class="text-sm text-gray-500 mb-1" id="bookCategory"></div>
-        <h1 class="text-3xl font-bold text-gray-800 mb-2" id="bookTitle"></h1>
-        <div class="text-lg text-gray-700 mb-2">by <span id="bookAuthor"></span></div>
-        <div class="flex items-center gap-4 mb-4">
-          <span class="text-2xl font-semibold text-primarynavy" id="bookPrice"></span>
-          <span class="text-lg text-gray-400 line-through" id="bookOldPrice"></span>
-          <span class="text-lg text-green-600" id="bookNewPrice"></span>
-          <!-- Rating giống book card -->
-          <span id="bookRating"
-            class="flex items-center gap-1 bg-[#eaeaea]/90 text-[#f7931e] shadow-sm text-base font-semibold px-2 py-1 rounded-full ml-2">
-            <i class="ri-star-s-fill text-[#f7931e] text-lg"></i>
-            <span id="bookRatingValue">0.0</span>
-            <span id="bookReviewCount" class="text-xs text-gray-500 ml-1"></span>
-          </span>
-        </div>
-        <div class="flex flex-wrap gap-4 mb-2 text-sm text-gray-600" id="bookInfoRow"></div>
-        <div class="flex items-center gap-4 mb-6">
-          <div class="flex items-center gap-2">
-            <button class="qty-btn" id="qtyMinus">-</button>
-            <input type="text" id="qtyInput" value="1" class="w-12 text-center border border-gray-200 rounded py-1"
-              readonly />
-            <button class="qty-btn" id="qtyPlus">+</button>
-          </div>
-          <button class="add-to-cart-btn px-8 py-3 font-semibold text-lg" id="addToCartBtn">ADD TO CART</button>
-          <button class="wishlist-btn w-10 h-10 flex items-center justify-center rounded-full ml-2" id="wishlistBtn"
-            title="Add to wishlist">
-            <i class="ri-heart-line text-2xl"></i>
-          </button>
-        </div>
-        <div class="text-gray-600" id="bookShortDesc"></div>
-        <div class="mt-6">
-          <span class="text-green-600 font-medium">Available to order, ships in 1-3 business days</span>
-        </div>
-        <div class="mt-2 text-sm text-gray-500">Format: Paperback &nbsp;|&nbsp; Pages: <span id="bookPages">---</span>
-        </div>
+  <main class="container mx-auto px-4 py-12">
+    <!-- Loading State -->
+    <div id="loadingState" class="flex justify-center items-center min-h-96">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden">
+      <div class="error-message text-center">
+        <h2 class="text-xl font-bold mb-2">Không tìm thấy sách</h2>
+        <p>Sách bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+        <a href="/books" class="inline-block mt-4 px-6 py-2 bg-primarynavy text-white rounded-lg">
+          ← Quay lại danh sách sách
+        </a>
       </div>
     </div>
-    <section class="desc-section" id="descSection">
-      <h2 class="text-2xl font-bold mb-4">Giới thiệu sách</h2>
-      <div class="text-gray-700 leading-relaxed" id="bookDesc"></div>
-    </section>
-    <!-- Đánh giá người dùng -->
-    <section class="desc-section mt-8" id="userReviewsSection">
-      <h2 class="text-2xl font-bold mb-4">Đánh giá & Nhận xét</h2>
-      <div id="userReviewsList" class="mb-6"></div>
-      <div class="bg-gray-50 rounded p-4 mb-2">
-        <h3 class="font-semibold mb-2">Để lại đánh giá của bạn</h3>
-        <form id="reviewForm" class="flex flex-col gap-2">
-          <label class="flex items-center gap-2">
-            <span class="font-medium">Đánh giá:</span>
-            <span id="userRatingStars" class="flex items-center gap-1">
-              <!-- 5 sao -->
-              <i class="ri-star-line text-2xl cursor-pointer" data-star="1"></i>
-              <i class="ri-star-line text-2xl cursor-pointer" data-star="2"></i>
-              <i class="ri-star-line text-2xl cursor-pointer" data-star="3"></i>
-              <i class="ri-star-line text-2xl cursor-pointer" data-star="4"></i>
-              <i class="ri-star-line text-2xl cursor-pointer" data-star="5"></i>
-            </span>
-            <span id="userRatingValue" class="ml-2 text-primarynavy font-semibold">0</span>/5
-          </label>
-          <textarea id="userReviewText" rows="3" class="border rounded p-2 w-full" placeholder="Nhận xét của bạn về sách..."></textarea>
-          <button type="submit" class="add-to-cart-btn px-6 py-2 font-semibold w-max">Gửi đánh giá</button>
-        </form>
+
+    <!-- Book Detail Content -->
+    <div id="bookContent" class="hidden">
+      <div class="flex flex-col md:flex-row gap-12">
+        <div class="md:w-2/5 flex justify-center items-start">
+          <img id="bookImage" src="" alt="Book cover"
+            class="book-cover-detail w-[320px] h-[480px] md:w-[340px] md:h-[520px]" />
+        </div>
+        <div class="md:w-3/5 flex flex-col gap-4">
+          <div class="text-sm text-gray-500 mb-1" id="bookCategory"></div>
+          <h1 class="text-3xl font-bold text-gray-800 mb-2" id="bookTitle"></h1>
+          <div class="text-lg text-gray-700 mb-2">Tác giả: <span id="bookAuthor" class="font-medium"></span></div>
+          <div class="text-lg text-gray-700 mb-2">Năm xuất bản: <span id="bookYear" class="font-medium"></span></div>
+          <div class="flex items-center gap-4 mb-4">
+            <span class="text-2xl font-semibold text-primarynavy" id="bookPrice"></span>
+          </div>
+
+          <!-- Stock Status -->
+          <div class="mb-4">
+            <span id="stockBadge" class="stock-badge"></span>
+            <div class="text-sm text-gray-600 mt-1">
+              Số lượng có sẵn: <span id="stockQuantity" class="font-medium"></span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4 mb-6" id="purchaseSection">
+            <div class="flex items-center gap-2">
+              <button class="qty-btn" id="qtyMinus">-</button>
+              <input type="text" id="qtyInput" value="1" class="w-12 text-center border border-gray-200 rounded py-1"
+                readonly />
+              <button class="qty-btn" id="qtyPlus">+</button>
+            </div>
+            <button class="add-to-cart-btn px-8 py-3 font-semibold text-lg" id="addToCartBtn">THÊM VÀO GIỎ</button>
+            <button class="wishlist-btn w-10 h-10 flex items-center justify-center rounded-full ml-2 relative z-10" id="wishlistBtn"
+              title="Thêm vào danh sách yêu thích" 
+              style="cursor: pointer !important; pointer-events: auto !important;">
+              <i class="ri-heart-line text-2xl pointer-events-none"></i>
+            </button>
+          </div>
+
+          <div class="text-gray-600" id="bookShortDesc"></div>
+        </div>
       </div>
-    </section>
+      <section class="desc-section" id="descSection">
+        <h2 class="text-2xl font-bold mb-4">Mô tả sách</h2>
+        <div class="text-gray-700 leading-relaxed" id="bookDesc"></div>
+      </section>
+
+      <!-- Reviews Section -->
+      <section class="desc-section" id="reviewsSection">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">Đánh giá sách</h2>
+          <button id="addReviewBtn"
+            class="px-4 py-2 bg-primarynavy text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Viết đánh giá
+          </button>
+        </div>
+
+        <!-- Review Form (initially hidden) -->
+        <div id="reviewForm" class="hidden mb-6 p-4 border border-gray-200 rounded-lg">
+          <h3 class="text-lg font-semibold mb-4">Viết đánh giá của bạn</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2">Đánh giá:</label>
+            <div class="flex gap-1" id="ratingStars">
+              <i class="ri-star-line text-2xl text-gray-300 cursor-pointer" data-rating="1"></i>
+              <i class="ri-star-line text-2xl text-gray-300 cursor-pointer" data-rating="2"></i>
+              <i class="ri-star-line text-2xl text-gray-300 cursor-pointer" data-rating="3"></i>
+              <i class="ri-star-line text-2xl text-gray-300 cursor-pointer" data-rating="4"></i>
+              <i class="ri-star-line text-2xl text-gray-300 cursor-pointer" data-rating="5"></i>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="reviewComment" class="block text-sm font-medium mb-2">Nhận xét:</label>
+            <textarea id="reviewComment" rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primarynavy"
+              placeholder="Chia sẻ cảm nhận của bạn về cuốn sách..."></textarea>
+          </div>
+          <div class="flex gap-2">
+            <button id="submitReviewBtn"
+              class="px-4 py-2 bg-primarynavy text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Gửi đánh giá
+            </button>
+            <button id="cancelReviewBtn"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors">
+              Hủy
+            </button>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <div id="reviewsList">
+          <!-- Reviews will be loaded here -->
+        </div>
+
+        <!-- No Reviews Message -->
+        <div id="noReviewsMessage" class="text-center text-gray-500 py-8 hidden">
+          <i class="ri-chat-3-line text-4xl mb-2"></i>
+          <p>Chưa có đánh giá nào cho cuốn sách này.</p>
+          <p class="text-sm">Hãy là người đầu tiên chia sẻ cảm nhận!</p>
+        </div>
+      </section>
+    </div>
   </main>
   <div id="footer-placeholder"></div>
+
   <script>
-    // Lấy dữ liệu từ API và hiển thị theo slug
-    async function fetchBookAndRender() {
-      function getBookSlugFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('slug')) return params.get('slug');
-        if (window.location.hash.startsWith('#slug=')) {
-          return window.location.hash.replace('#slug=', '');
+    // Global variables
+    let currentBook = null;
+    let maxQuantity = 0;
+
+    // Get book ID from URL
+    function getBookIdFromUrl() {
+      // Primary method: check URL query parameter ?id=bookId
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('id')) return params.get('id');
+
+      // Secondary: Match /books/1-slug or /books/1-slug.html
+      const pathMatch = window.location.pathname.match(/books\/(\d+)/);
+      if (pathMatch) return pathMatch[1];
+
+      // Tertiary: check for /bookDetail/1 format
+      const detailMatch = window.location.pathname.match(/bookDetail\/(\d+)/);
+      if (detailMatch) return detailMatch[1];
+
+      // No valid ID found
+      return null;
+    }
+
+    // Show loading state
+    function showLoading() {
+      document.getElementById('loadingState').classList.remove('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('bookContent').classList.add('hidden');
+    }
+
+    // Show error state
+    function showError(message = 'Không tìm thấy sách') {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('errorState').classList.remove('hidden');
+      document.getElementById('bookContent').classList.add('hidden');
+
+      const errorMsg = document.querySelector('#errorState .error-message p');
+      if (errorMsg) errorMsg.textContent = message;
+    }
+
+    // Show book content
+    function showBookContent() {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('bookContent').classList.remove('hidden');
+    }
+
+    // Update stock badge
+    function updateStockBadge(quantity) {
+      const badge = document.getElementById('stockBadge');
+      const quantitySpan = document.getElementById('stockQuantity');
+
+      quantitySpan.textContent = quantity || 0;
+
+      if (quantity > 10) {
+        badge.textContent = 'Còn hàng';
+        badge.className = 'stock-badge in-stock';
+      } else if (quantity > 0) {
+        badge.textContent = 'Sắp hết hàng';
+        badge.className = 'stock-badge low-stock';
+      } else {
+        badge.textContent = 'Hết hàng';
+        badge.className = 'stock-badge out-of-stock';
+      }
+    }
+
+    // Format price
+    function formatPrice(price) {
+      return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+    }
+
+    // Get book image with fallback
+    function getBookImage(book) {
+      console.log('📷 [getBookImage] Input book:', {
+        hasImageUrl: !!book.imageUrl,
+        imageUrl: book.imageUrl,
+        imageUrlType: typeof book.imageUrl,
+        imageUrlLength: book.imageUrl ? book.imageUrl.length : 0
+      });
+
+      if (!book.imageUrl || book.imageUrl.trim() === '') {
+        console.log('📷 [getBookImage] No imageUrl, using default');
+        return getDefaultImage();
+      }
+
+      // Convert Google Drive link if needed
+      const result = convertGoogleDriveLink(book.imageUrl);
+      console.log('📷 [getBookImage] Result:', result);
+      return result;
+    }
+
+    function convertGoogleDriveLink(url) {
+      console.log('📷 [convertGoogleDriveLink] Input URL:', url);
+      
+      if (!url) {
+        console.log('📷 [convertGoogleDriveLink] No URL, using default');
+        return getDefaultImage();
+      }
+
+      if (url.includes('drive.google.com/uc?')) {
+        console.log('📷 [convertGoogleDriveLink] Already converted Google Drive URL');
+        return url;
+      }
+
+      const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+      const match = url.match(driveRegex);
+
+      if (match && match[1]) {
+        const fileId = match[1];
+        const convertedUrl = `https://drive.google.com/uc?id=${fileId}&export=view`;
+        console.log('📷 [convertGoogleDriveLink] Converted Google Drive URL:', convertedUrl);
+        return convertedUrl;
+      }
+
+      console.log('📷 [convertGoogleDriveLink] Using original URL');
+      return url;
+    }
+
+    function getDefaultImage() {
+      return '../assets/images/default_image.jpg';
+    }
+
+    // Fill book data into UI
+    function fillBookData(book) {
+      currentBook = book;
+      console.log('📝 [fillBookData] currentBook set to:', currentBook);
+      console.log('📝 [fillBookData] currentBook._id:', currentBook._id);
+      
+      // Lấy quantity từ các field có thể có
+      maxQuantity = book.quantity || book.availableStock || book.stock || 0;
+      
+      // Debug stock quantity
+      console.log('📦 [bookDetail] Stock debug for book:', book.title, {
+          bookId: book._id,
+          quantity: book.quantity,
+          availableStock: book.availableStock,
+          stock: book.stock,
+          finalStock: maxQuantity,
+          allFields: Object.keys(book)
+      });
+
+      // Update page title
+      document.title = `${book.title} | Readify`;
+
+      // Fill basic info
+      const bookImage = document.getElementById('bookImage');
+      const imageSrc = getBookImage(book);
+      console.log('📷 [BookDetail] ', book);
+      console.log('📷 [BookDetail] Setting image src:', imageSrc);
+      console.log('📷 [BookDetail] Original imageUrl:', book.imageUrl);
+      
+      bookImage.src = imageSrc;
+      bookImage.alt = book.title;
+      bookImage.onerror = function() {
+        console.log('❌ [BookDetail] Image failed to load, using default');
+        this.src = getDefaultImage();
+      };
+      bookImage.onload = function() {
+        console.log('✅ [BookDetail] Image loaded successfully');
+      };
+
+      // Handle category - có thể là object hoặc string
+      let categoryName = 'Chưa phân loại';
+      if (book.category && typeof book.category === 'object') {
+        categoryName = book.category.name;
+      } else if (book.category) {
+        categoryName = book.category;
+      } else if (book.genre) {
+        categoryName = book.genre;
+      }
+      document.getElementById('bookCategory').textContent = categoryName;
+
+      document.getElementById('bookTitle').textContent = book.title;
+
+      // Handle author - có thể là object hoặc string
+      let authorName = 'Không rõ';
+      if (book.author && typeof book.author === 'object') {
+        authorName = book.author.name;
+      } else if (book.author) {
+        authorName = book.author;
+      }
+      document.getElementById('bookAuthor').textContent = authorName;
+
+      document.getElementById('bookYear').textContent = book.publishedYear || book.publicationYear || 'Không rõ';
+      document.getElementById('bookPrice').textContent = formatPrice(book.price || 0);
+
+      // Update stock
+      updateStockBadge(maxQuantity);
+
+      // Update description
+      const shortDesc = book.description ?
+        (book.description.length > 200 ? book.description.substring(0, 200) + '...' : book.description) :
+        'Không có mô tả ngắn';
+      document.getElementById('bookShortDesc').textContent = shortDesc;
+      document.getElementById('bookDesc').textContent = book.description || 'Không có mô tả chi tiết';
+
+      // Handle purchase section visibility
+      const purchaseSection = document.getElementById('purchaseSection');
+      if (maxQuantity <= 0) {
+        purchaseSection.style.opacity = '0.5';
+        purchaseSection.style.pointerEvents = 'none';
+        document.getElementById('addToCartBtn').textContent = 'HẾT HÀNG';
+        document.getElementById('addToCartBtn').disabled = true;
+      } else {
+        purchaseSection.style.opacity = '1';
+        purchaseSection.style.pointerEvents = 'auto';
+        document.getElementById('addToCartBtn').textContent = 'THÊM VÀO GIỎ';
+        document.getElementById('addToCartBtn').disabled = false;
+      }
+
+      // Debug log để kiểm tra data structure
+      console.log('📖 [Book Data] Full book object:', book);
+      console.log('📖 [Book Data] All keys:', Object.keys(book));
+      console.log('📖 [Book Data] ImageUrl field:', {
+        imageUrl: book.imageUrl,
+        image: book.image,
+        picture: book.picture,
+        photo: book.photo,
+        coverImage: book.coverImage,
+        bookImage: book.bookImage
+      });
+    }
+
+    // Load book data from API
+    async function loadBookData() {
+      try {
+        showLoading();
+
+        const bookId = getBookIdFromUrl();
+        if (!bookId) {
+          throw new Error('Không tìm thấy ID sách');
         }
-        const match = window.location.pathname.match(/books\/(.+?)(?:\.html)?$/);
-        if (match) return match[1];
-        return '';
+
+        console.log('Loading book with ID:', bookId);
+        const response = await ApiService.getBookById(bookId);
+
+        if (!response.success || !response.book) {
+          throw new Error('Không tìm thấy thông tin sách');
+        }
+
+        fillBookData(response.book);
+        showBookContent();
+
+      } catch (error) {
+        console.error('Error loading book:', error);
+        showError(error.message);
       }
-      function toSlug(str) {
-        return str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/đ/g, 'd')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
-      const slug = getBookSlugFromUrl();
-      if (!slug) {
-        document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-        document.getElementById('bookDesc').innerText = '';
+    }
+
+    // Quantity controls
+    function initQuantityControls() {
+      const qtyInput = document.getElementById('qtyInput');
+      const qtyMinus = document.getElementById('qtyMinus');
+      const qtyPlus = document.getElementById('qtyPlus');
+
+      qtyMinus.onclick = () => {
+        let val = parseInt(qtyInput.value);
+        if (val > 1) {
+          qtyInput.value = val - 1;
+        }
+      };
+
+      qtyPlus.onclick = () => {
+        let val = parseInt(qtyInput.value);
+        if (val < maxQuantity) {
+          qtyInput.value = val + 1;
+        }
+      };
+    }
+
+    // Add to cart functionality
+    function initAddToCart() {
+      const addToCartBtn = document.getElementById('addToCartBtn');
+
+      addToCartBtn.onclick = async function () {
+        if (maxQuantity <= 0) return;
+
+        const quantity = parseInt(document.getElementById('qtyInput').value);
+
+        try {
+          // Disable button during request
+          this.disabled = true;
+          const originalText = this.textContent;
+          this.textContent = 'ĐANG THÊM...';
+
+          // Call API to add to cart
+          await ApiService.addToCart(currentBook._id, quantity);
+
+          // Success feedback
+          this.textContent = '✓ ĐÃ THÊM';
+          this.classList.add('bg-green-500');
+
+          setTimeout(() => {
+            this.textContent = originalText;
+            this.classList.remove('bg-green-500');
+            this.disabled = false;
+          }, 1500);
+
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+
+          // Error feedback
+          this.textContent = 'LỖI!';
+          this.classList.add('bg-red-500');
+
+          setTimeout(() => {
+            this.textContent = 'THÊM VÀO GIỎ';
+            this.classList.remove('bg-red-500');
+            this.disabled = false;
+          }, 1500);
+        }
+      };
+    }
+
+                // Wishlist functionality
+    function initWishlist() {
+    const wishlistBtn = document.getElementById('wishlistBtn');
+      
+      if (!wishlistBtn) {
+        console.error('❌ [Wishlist] Wishlist button not found!');
         return;
       }
-      // Ưu tiên lấy book từ sessionStorage nếu có
-      let book = null;
-      const stored = sessionStorage.getItem('selectedBook');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (toSlug(parsed.title) === slug) {
-            book = parsed;
-          }
-        } catch {}
-      }
-      if (!book) {
-        try {
-          const res = await fetch('http://localhost:5000/api/books');
-          let data = await res.json();
-          let books = Array.isArray(data.books) ? data.books : data;
-          const found = books.find(b => toSlug(b.title) === slug);
-          if (!found) {
-            document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-            document.getElementById('bookDesc').innerText = '';
-            return;
-          }
-          book = found;
-        } catch (e) {
-          document.getElementById('bookTitle').innerText = 'Không thể lấy dữ liệu sách từ API!';
-          document.getElementById('bookDesc').innerText = 'Vui lòng kiểm tra lại kết nối hoặc thử lại sau.';
+      
+      console.log('✅ [Wishlist] Initializing wishlist button');
+      console.log('🔍 [Wishlist] Initial button state:', {
+        classList: Array.from(wishlistBtn.classList),
+        isFaved: wishlistBtn.classList.contains('faved'),
+        iconClass: wishlistBtn.querySelector('i')?.className
+      });
+      
+      // Add debug click handler first
+      wishlistBtn.addEventListener('click', function(e) {
+        console.log('🖱️ [Wishlist] Button clicked!', e);
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      
+      wishlistBtn.onclick = async function (e) {
+        console.log('🖱️ [Wishlist] Onclick handler triggered');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!currentBook) {
+          console.warn('⚠️ [Wishlist] No current book data');
           return;
         }
-      }
-      await renderBook(book);
-      afterRenderBook(book);
-    }
-
-    // Hàm sinh nội dung mẫu giới thiệu sách (5-7 câu, không dùng API)
-    function generateBookSummary(book) {
-      const title = book.title || 'Cuốn sách này';
-      const author = book.author?.name || book.author || 'Không rõ';
-      const category = book.category?.name || book.category || 'khác';
-      const genreSentence = `"${title}" thuộc thể loại ${category}, mang đến cho bạn những trải nghiệm mới mẻ và sâu sắc.`;
-      const authorSentence = `Tác giả của cuốn sách là ${author}, người đã dành nhiều tâm huyết để truyền tải thông điệp ý nghĩa.`;
-      const contentSentence = `Nội dung sách xoay quanh những vấn đề gần gũi với cuộc sống, giúp người đọc dễ dàng đồng cảm và suy ngẫm.`;
-      const valueSentence = `Bên cạnh đó, cuốn sách còn cung cấp nhiều kiến thức bổ ích, góp phần mở rộng hiểu biết cho độc giả.`;
-      const styleSentence = `Với lối viết cuốn hút, mạch lạc và giàu cảm xúc, tác phẩm này chắc chắn sẽ để lại ấn tượng sâu đậm.`;
-      const recommendSentence = `Đây là lựa chọn tuyệt vời dành cho những ai yêu thích đọc sách và khám phá tri thức mới.`;
-      const endingSentence = `Hãy dành thời gian trải nghiệm "${title}" để cảm nhận những giá trị mà cuốn sách mang lại!`;
-      return [genreSentence, authorSentence, contentSentence, valueSentence, styleSentence, recommendSentence, endingSentence].join(' ');
-    }
-
-    async function renderBook(book) {
-      document.getElementById('bookImage').src = book.imageUrl || book.image || '';
-      document.getElementById('bookImage').alt = book.title || '';
-      document.getElementById('bookCategory').innerText = book.category?.name || book.category || '';
-      document.getElementById('bookTitle').innerText = book.title || '';
-      document.getElementById('bookAuthor').innerText = book.author?.name || book.author || '';
-      // Hiển thị đúng 2 giá tiền như bookcard: price (giá đang bán) và oldPrice (giá gốc)
-      let displayPrice = book.price;
-      let displayOldPrice = book.oldPrice;
-      if (displayOldPrice && displayOldPrice > displayPrice) {
-        document.getElementById('bookPrice').innerText = displayPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').innerText = displayOldPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').style.display = '';
-      } else if (displayOldPrice && displayOldPrice < displayPrice) {
-        document.getElementById('bookPrice').innerText = displayOldPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').innerText = displayPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').style.display = '';
-      } else {
-        document.getElementById('bookPrice').innerText = displayPrice ? displayPrice.toLocaleString() + '₫' : '';
-        document.getElementById('bookOldPrice').innerText = '';
-        document.getElementById('bookOldPrice').style.display = 'none';
-      }
-      // Hiển thị rating giống book card
-      const rating = book.rating !== undefined ? book.rating : (book.avg_rating !== undefined ? book.avg_rating : 4.8);
-      const nReview = book.n_review !== undefined ? book.n_review : (book.review_count !== undefined ? book.review_count : '');
-      document.getElementById('bookRatingValue').innerText = Number(rating).toFixed(1);
-      document.getElementById('bookReviewCount').innerText = nReview ? `(${nReview})` : '';
-      // Hiển thị infoRow: ID, số trang, năm xuất bản, nhà xuất bản, ngôn ngữ, ISBN, trạng thái, số lượng còn, ...
-      const infoRow = [];
-      if (book._id || book.id) infoRow.push(`<span><b>ID:</b> ${book._id || book.id}</span>`);
-      if (book.pages) infoRow.push(`<span><b>Số trang:</b> ${book.pages}</span>`);
-      if (book.publishYear || book.year) infoRow.push(`<span><b>Năm XB:</b> ${book.publishYear || book.year}</span>`);
-      if (book.publisher) infoRow.push(`<span><b>NXB:</b> ${book.publisher}</span>`);
-      if (book.language) infoRow.push(`<span><b>Ngôn ngữ:</b> ${book.language}</span>`);
-      if (book.isbn) infoRow.push(`<span><b>ISBN:</b> ${book.isbn}</span>`);
-      if (book.status) infoRow.push(`<span><b>Trạng thái:</b> ${book.status}</span>`);
-      if (book.quantity !== undefined) infoRow.push(`<span><b>Còn lại:</b> ${book.quantity}</span>`);
-      document.getElementById('bookInfoRow').innerHTML = infoRow.join(' | ');
-      document.getElementById('bookPages').innerText = book.pages || '---';
-      document.getElementById('bookShortDesc').innerText = book.shortDesc || '';
-      // Phần giới thiệu sách: ưu tiên thủ công, nếu không có thì sinh mẫu
-      let desc = '';
-      if (book.manualDesc) desc = book.manualDesc;
-      else if (book.description) desc = book.description;
-      else if (book.shortDesc) desc = book.shortDesc;
-      else desc = generateBookSummary(book);
-      document.getElementById('bookDesc').innerText = desc || 'Chưa có thông tin giới thiệu.';
-   
-    }
-    fetchBookAndRender();
-    // Quantity logic
-    document.addEventListener('DOMContentLoaded', function() {
-      qtyInput = document.getElementById('qtyInput');
-      document.getElementById('qtyMinus').onclick = () => {
-        let val = parseInt(qtyInput.value);
-        if (val > 1) qtyInput.value = val - 1;
-      };
-      document.getElementById('qtyPlus').onclick = () => {
-        let val = parseInt(qtyInput.value);
-        qtyInput.value = val + 1;
-      };
-      // Add to cart
-      document.getElementById('addToCartBtn').onclick = function () {
-        this.innerText = '✔ Đã thêm';
-        this.classList.add('bg-green-500', 'text-white');
-        setTimeout(() => {
-          this.innerText = 'ADD TO CART';
-          this.classList.remove('bg-green-500', 'text-white');
-        }, 1200);
-      };
-      // Wishlist
-      const wishlistBtn = document.getElementById('wishlistBtn');
-      wishlistBtn.onclick = function () {
-        wishlistBtn.classList.toggle('faved');
+        
+        console.log('📖 [Wishlist] Current book:', currentBook._id);
+        
         const icon = wishlistBtn.querySelector('i');
-        if (wishlistBtn.classList.contains('faved')) {
-          icon.classList.remove('ri-heart-line');
+        const isFaved = wishlistBtn.classList.contains('faved');
+        
+        console.log('❤️ [Wishlist] Current state - isFaved:', isFaved);
+        
+        try {
+          // Disable button during request
+          wishlistBtn.disabled = true;
+          wishlistBtn.style.opacity = '0.5';
+          
+          if (isFaved) {
+            console.log('➖ [Wishlist] Removing from favourites...');
+            await ApiService.removeFromFavourites(currentBook._id);
+            wishlistBtn.classList.remove('faved');
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            console.log('✅ [Wishlist] Removed successfully');
+          } else {
+            console.log('➕ [Wishlist] Adding to favourites...');
+            await ApiService.addToFavourites(currentBook._id);
+            wishlistBtn.classList.add('faved');
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            console.log('✅ [Wishlist] Added successfully');
+          }
+          
+        } catch (error) {
+          console.error('❌ [Wishlist] Error toggling wishlist:', error);
+          alert('Có lỗi xảy ra: ' + error.message);
+          
+          // Revert UI state on error
+          if (isFaved) {
+            wishlistBtn.classList.add('faved');
+            icon.classList.add('ri-heart-fill');
+            icon.classList.remove('ri-heart-line');
+          } else {
+            wishlistBtn.classList.remove('faved');
+            icon.classList.add('ri-heart-line');
+            icon.classList.remove('ri-heart-fill');
+          }
+        } finally {
+          wishlistBtn.disabled = false;
+          wishlistBtn.style.opacity = '1';
+        }
+      };
+    }
+
+    // Check if book is in favourites
+    async function checkFavouriteStatus() {
+      if (!currentBook) {
+        console.log('⚠️ [checkFavouriteStatus] No currentBook, skipping');
+        return;
+      }
+
+      console.log('💖 [checkFavouriteStatus] Checking favourite status for book:', currentBook._id);
+
+      try {
+        const response = await ApiService.getFavourites();
+        console.log('💖 [checkFavouriteStatus] API response:', response);
+        
+        // Backend trả về response khác nhau, cần handle flexible
+        let favourites = [];
+        if (response.favourites) {
+          favourites = response.favourites;
+        } else if (Array.isArray(response)) {
+          favourites = response;
+        } else if (response.success && response.data) {
+          favourites = response.data;
+        }
+
+        console.log('💖 [checkFavouriteStatus] Processed favourites:', favourites);
+
+        const isFaved = favourites.some(fav => {
+          const match1 = fav._id === currentBook._id;
+          const match2 = fav.book && fav.book._id === currentBook._id;
+          const match3 = fav.book === currentBook._id;
+          
+          console.log('💖 [checkFavouriteStatus] Checking favourite:', {
+            favId: fav._id,
+            favBookId: fav.book?._id || fav.book,
+            currentBookId: currentBook._id,
+            match1, match2, match3
+          });
+          
+          return match1 || match2 || match3;
+        });
+
+        console.log('💖 [checkFavouriteStatus] Is book in favourites?', isFaved);
+
+        const wishlistBtn = document.getElementById('wishlistBtn');
+        const icon = wishlistBtn.querySelector('i');
+
+        // Log current state before change
+        console.log('💖 [checkFavouriteStatus] Current UI state before update:', {
+          hasFavedClass: wishlistBtn.classList.contains('faved'),
+          iconClasses: icon.className
+        });
+
+        // Always reset to ensure clean state
+        wishlistBtn.classList.remove('faved');
+        icon.classList.remove('ri-heart-fill', 'ri-heart-line');
+
+        if (isFaved) {
+          console.log('💖 [checkFavouriteStatus] Setting UI to favourite state');
+          wishlistBtn.classList.add('faved');
           icon.classList.add('ri-heart-fill');
         } else {
-          icon.classList.remove('ri-heart-fill');
+          console.log('💖 [checkFavouriteStatus] Setting UI to non-favourite state');
           icon.classList.add('ri-heart-line');
         }
-      };
-    });
-    // Đánh giá người dùng (localStorage demo)
-    function renderUserReviews(bookId) {
-      const reviews = JSON.parse(localStorage.getItem('bookReviews_' + bookId) || '[]');
-      const listDiv = document.getElementById('userReviewsList');
-      if (!listDiv) return;
-      if (reviews.length === 0) {
-        listDiv.innerHTML = '<div class="text-gray-500 italic">Chưa có đánh giá nào cho sách này.</div>';
-      } else {
-        listDiv.innerHTML = reviews.map(r => `
-          <div class="mb-4 p-3 bg-white rounded shadow-sm"> 
-            <div class="flex items-center gap-2 mb-1">
-              <span class="font-semibold text-primarynavy">${r.name || 'Người dùng'}</span>
-              <span class="flex items-center gap-1 text-[#f7931e]">${'<i class=\'ri-star-s-fill\'></i>'.repeat(r.rating)}${'<i class=\'ri-star-line\'></i>'.repeat(5 - r.rating)}</span>
-              <span class="text-xs text-gray-400 ml-2">${r.date || ''}</span>
-            </div>
-            <div class="text-gray-700">${r.text || ''}</div>
-          </div>
-        `).join('');
+
+        // Log final state after change
+        console.log('💖 [checkFavouriteStatus] Final UI state after update:', {
+          hasFavedClass: wishlistBtn.classList.contains('faved'),
+          iconClasses: icon.className
+        });
+      } catch (error) {
+        console.error('❌ [checkFavouriteStatus] Error checking favourite status:', error);
+        // Don't throw error, just log it since favourite status is not critical
       }
     }
-    function setupReviewForm(bookId) {
-      const stars = document.querySelectorAll('#userRatingStars i');
-      let currentRating = 0;
-      // Hiệu ứng hover và chọn rating
-      stars.forEach((star, idx) => {
-        star.addEventListener('mouseenter', function() {
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i <= idx);
-            s.classList.toggle('ri-star-line', i > idx);
-          });
-          document.getElementById('userRatingValue').innerText = idx + 1;
+
+    // Reviews functionality
+    let selectedRating = 0;
+
+    function initReviews() {
+      const addReviewBtn = document.getElementById('addReviewBtn');
+      const reviewForm = document.getElementById('reviewForm');
+      const cancelReviewBtn = document.getElementById('cancelReviewBtn');
+      const submitReviewBtn = document.getElementById('submitReviewBtn');
+      const ratingStars = document.getElementById('ratingStars');
+
+      // Show/hide review form
+      addReviewBtn.onclick = () => {
+        reviewForm.classList.toggle('hidden');
+      };
+
+      cancelReviewBtn.onclick = () => {
+        reviewForm.classList.add('hidden');
+        resetReviewForm();
+      };
+
+      // Rating stars functionality
+      const stars = ratingStars.querySelectorAll('i');
+      stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+          const rating = parseInt(star.dataset.rating);
+          highlightStars(rating);
         });
-        star.addEventListener('mouseleave', function() {
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i < currentRating);
-            s.classList.toggle('ri-star-line', i >= currentRating);
-          });
-          document.getElementById('userRatingValue').innerText = currentRating;
+
+        star.addEventListener('mouseout', () => {
+          highlightStars(selectedRating);
         });
-        star.addEventListener('click', function() {
-          currentRating = idx + 1;
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i < currentRating);
-            s.classList.toggle('ri-star-line', i >= currentRating);
-          });
-          document.getElementById('userRatingValue').innerText = currentRating;
+
+        star.addEventListener('click', () => {
+          selectedRating = parseInt(star.dataset.rating);
+          highlightStars(selectedRating);
         });
       });
-      document.getElementById('reviewForm').onsubmit = function(e) {
-        e.preventDefault();
-        const text = document.getElementById('userReviewText').value.trim();
-        if (!currentRating || !text) {
-          alert('Vui lòng chọn số sao và nhập nhận xét!');
-          return;
-        }
-        const reviews = JSON.parse(localStorage.getItem('bookReviews_' + bookId) || '[]');
-        reviews.unshift({
-          name: 'Người dùng',
-          rating: currentRating,
-          text,
-          date: new Date().toLocaleString('vi-VN')
-        });
-        localStorage.setItem('bookReviews_' + bookId, JSON.stringify(reviews));
-        document.getElementById('userReviewText').value = '';
-        currentRating = 0;
-        stars.forEach((s, i) => {
-          s.classList.remove('ri-star-s-fill');
-          s.classList.add('ri-star-line');
-        });
-        document.getElementById('userRatingValue').innerText = '0';
-        renderUserReviews(bookId);
-      };
-    }
-    // Gọi sau khi renderBook
-    function afterRenderBook(book) {
-      const bookId = (book && (book._id || book.id)) || '';
-      renderUserReviews(bookId);
-      setupReviewForm(bookId);
-    }
-    // Sửa fetchBookAndRender để gọi afterRenderBook
-    async function fetchBookAndRender() {
-      function getBookSlugFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('slug')) return params.get('slug');
-        if (window.location.hash.startsWith('#slug=')) {
-          return window.location.hash.replace('#slug=', '');
-        }
-        const match = window.location.pathname.match(/books\/(.+?)(?:\.html)?$/);
-        if (match) return match[1];
-        return '';
-      }
-      function toSlug(str) {
-        return str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/đ/g, 'd')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
-      const slug = getBookSlugFromUrl();
-      if (!slug) {
-        document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-        document.getElementById('bookDesc').innerText = '';
-        return;
-      }
-      // Ưu tiên lấy book từ sessionStorage nếu có
-      let book = null;
-      const stored = sessionStorage.getItem('selectedBook');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (toSlug(parsed.title) === slug) {
-            book = parsed;
-          }
-        } catch {}
-      }
-      if (!book) {
-        try {
-          const res = await fetch('http://localhost:5000/api/books');
-          let data = await res.json();
-          let books = Array.isArray(data.books) ? data.books : data;
-          const found = books.find(b => toSlug(b.title) === slug);
-          if (!found) {
-            document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-            document.getElementById('bookDesc').innerText = '';
-            return;
-          }
-          book = found;
-        } catch (e) {
-          document.getElementById('bookTitle').innerText = 'Không thể lấy dữ liệu sách từ API!';
-          document.getElementById('bookDesc').innerText = 'Vui lòng kiểm tra lại kết nối hoặc thử lại sau.';
-          return;
-        }
-      }
-      await renderBook(book);
-      afterRenderBook(book);
+
+      // Submit review
+      submitReviewBtn.onclick = submitReview;
     }
 
-    // Hàm sinh nội dung mẫu giới thiệu sách (5-7 câu, không dùng API)
-    function generateBookSummary(book) {
-      const title = book.title || 'Cuốn sách này';
-      const author = book.author?.name || book.author || 'Không rõ';
-      const category = book.category?.name || book.category || 'khác';
-      const genreSentence = `"${title}" thuộc thể loại ${category}, mang đến cho bạn những trải nghiệm mới mẻ và sâu sắc.`;
-      const authorSentence = `Tác giả của cuốn sách là ${author}, người đã dành nhiều tâm huyết để truyền tải thông điệp ý nghĩa.`;
-      const contentSentence = `Nội dung sách xoay quanh những vấn đề gần gũi với cuộc sống, giúp người đọc dễ dàng đồng cảm và suy ngẫm.`;
-      const valueSentence = `Bên cạnh đó, cuốn sách còn cung cấp nhiều kiến thức bổ ích, góp phần mở rộng hiểu biết cho độc giả.`;
-      const styleSentence = `Với lối viết cuốn hút, mạch lạc và giàu cảm xúc, tác phẩm này chắc chắn sẽ để lại ấn tượng sâu đậm.`;
-      const recommendSentence = `Đây là lựa chọn tuyệt vời dành cho những ai yêu thích đọc sách và khám phá tri thức mới.`;
-      const endingSentence = `Hãy dành thời gian trải nghiệm "${title}" để cảm nhận những giá trị mà cuốn sách mang lại!`;
-      return [genreSentence, authorSentence, contentSentence, valueSentence, styleSentence, recommendSentence, endingSentence].join(' ');
-    }
-
-    async function renderBook(book) {
-      document.getElementById('bookImage').src = book.imageUrl || book.image || '';
-      document.getElementById('bookImage').alt = book.title || '';
-      document.getElementById('bookCategory').innerText = book.category?.name || book.category || '';
-      document.getElementById('bookTitle').innerText = book.title || '';
-      document.getElementById('bookAuthor').innerText = book.author?.name || book.author || '';
-      // Hiển thị đúng 2 giá tiền như bookcard: price (giá đang bán) và oldPrice (giá gốc)
-      let displayPrice = book.price;
-      let displayOldPrice = book.oldPrice;
-      if (displayOldPrice && displayOldPrice > displayPrice) {
-        document.getElementById('bookPrice').innerText = displayPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').innerText = displayOldPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').style.display = '';
-      } else if (displayOldPrice && displayOldPrice < displayPrice) {
-        document.getElementById('bookPrice').innerText = displayOldPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').innerText = displayPrice.toLocaleString() + '₫';
-        document.getElementById('bookOldPrice').style.display = '';
-      } else {
-        document.getElementById('bookPrice').innerText = displayPrice ? displayPrice.toLocaleString() + '₫' : '';
-        document.getElementById('bookOldPrice').innerText = '';
-        document.getElementById('bookOldPrice').style.display = 'none';
-      }
-      // Hiển thị rating giống book card
-      const rating = book.rating !== undefined ? book.rating : (book.avg_rating !== undefined ? book.avg_rating : 4.8);
-      const nReview = book.n_review !== undefined ? book.n_review : (book.review_count !== undefined ? book.review_count : '');
-      document.getElementById('bookRatingValue').innerText = Number(rating).toFixed(1);
-      document.getElementById('bookReviewCount').innerText = nReview ? `(${nReview})` : '';
-      // Hiển thị infoRow: ID, số trang, năm xuất bản, nhà xuất bản, ngôn ngữ, ISBN, trạng thái, số lượng còn, ...
-      const infoRow = [];
-      if (book._id || book.id) infoRow.push(`<span><b>ID:</b> ${book._id || book.id}</span>`);
-      if (book.pages) infoRow.push(`<span><b>Số trang:</b> ${book.pages}</span>`);
-      if (book.publishYear || book.year) infoRow.push(`<span><b>Năm XB:</b> ${book.publishYear || book.year}</span>`);
-      if (book.publisher) infoRow.push(`<span><b>NXB:</b> ${book.publisher}</span>`);
-      if (book.language) infoRow.push(`<span><b>Ngôn ngữ:</b> ${book.language}</span>`);
-      if (book.isbn) infoRow.push(`<span><b>ISBN:</b> ${book.isbn}</span>`);
-      if (book.status) infoRow.push(`<span><b>Trạng thái:</b> ${book.status}</span>`);
-      if (book.quantity !== undefined) infoRow.push(`<span><b>Còn lại:</b> ${book.quantity}</span>`);
-      document.getElementById('bookInfoRow').innerHTML = infoRow.join(' | ');
-      document.getElementById('bookPages').innerText = book.pages || '---';
-      document.getElementById('bookShortDesc').innerText = book.shortDesc || '';
-      // Phần giới thiệu sách: ưu tiên thủ công, nếu không có thì sinh mẫu
-      let desc = '';
-      if (book.manualDesc) desc = book.manualDesc;
-      else if (book.description) desc = book.description;
-      else if (book.shortDesc) desc = book.shortDesc;
-      else desc = generateBookSummary(book);
-      document.getElementById('bookDesc').innerText = desc || 'Chưa có thông tin giới thiệu.';
-   
-    }
-    fetchBookAndRender();
-    // Quantity logic
-    let qtyInput;
-    document.addEventListener('DOMContentLoaded', function() {
-      qtyInput = document.getElementById('qtyInput');
-      document.getElementById('qtyMinus').onclick = () => {
-        let val = parseInt(qtyInput.value);
-        if (val > 1) qtyInput.value = val - 1;
-      };
-      document.getElementById('qtyPlus').onclick = () => {
-        let val = parseInt(qtyInput.value);
-        qtyInput.value = val + 1;
-      };
-      // Add to cart
-      document.getElementById('addToCartBtn').onclick = function () {
-        this.innerText = '✔ Đã thêm';
-        this.classList.add('bg-green-500', 'text-white');
-        setTimeout(() => {
-          this.innerText = 'ADD TO CART';
-          this.classList.remove('bg-green-500', 'text-white');
-        }, 1200);
-      };
-      // Wishlist
-      const wishlistBtn = document.getElementById('wishlistBtn');
-      wishlistBtn.onclick = function () {
-        wishlistBtn.classList.toggle('faved');
-        const icon = wishlistBtn.querySelector('i');
-        if (wishlistBtn.classList.contains('faved')) {
-          icon.classList.remove('ri-heart-line');
-          icon.classList.add('ri-heart-fill');
+    function highlightStars(rating) {
+      const stars = document.querySelectorAll('#ratingStars i');
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.classList.remove('ri-star-line', 'text-gray-300');
+          star.classList.add('ri-star-fill', 'text-yellow-400');
         } else {
-          icon.classList.remove('ri-heart-fill');
-          icon.classList.add('ri-heart-line');
+          star.classList.remove('ri-star-fill', 'text-yellow-400');
+          star.classList.add('ri-star-line', 'text-gray-300');
         }
-      };
-    });
-    // Đánh giá người dùng (localStorage demo)
-    function renderUserReviews(bookId) {
-      const reviews = JSON.parse(localStorage.getItem('bookReviews_' + bookId) || '[]');
-      const listDiv = document.getElementById('userReviewsList');
-      if (!listDiv) return;
-      if (reviews.length === 0) {
-        listDiv.innerHTML = '<div class="text-gray-500 italic">Chưa có đánh giá nào cho sách này.</div>';
-      } else {
-        listDiv.innerHTML = reviews.map(r => `
-          <div class="mb-4 p-3 bg-white rounded shadow-sm">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="font-semibold text-primarynavy">${r.name || 'Người dùng'}</span>
-              <span class="flex items-center gap-1 text-[#f7931e]">${'<i class=\'ri-star-s-fill\'></i>'.repeat(r.rating)}${'<i class=\'ri-star-line\'></i>'.repeat(5 - r.rating)}</span>
-              <span class="text-xs text-gray-400 ml-2">${r.date || ''}</span>
-            </div>
-            <div class="text-gray-700">${r.text || ''}</div>
-          </div>
-        `).join('');
-      }
-    }
-    function setupReviewForm(bookId) {
-      const stars = document.querySelectorAll('#userRatingStars i');
-      let currentRating = 0;
-      // Hiệu ứng hover và chọn rating
-      stars.forEach((star, idx) => {
-        star.addEventListener('mouseenter', function() {
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i <= idx);
-            s.classList.toggle('ri-star-line', i > idx);
-          });
-          document.getElementById('userRatingValue').innerText = idx + 1;
-        });
-        star.addEventListener('mouseleave', function() {
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i < currentRating);
-            s.classList.toggle('ri-star-line', i >= currentRating);
-          });
-          document.getElementById('userRatingValue').innerText = currentRating;
-        });
-        star.addEventListener('click', function() {
-          currentRating = idx + 1;
-          stars.forEach((s, i) => {
-            s.classList.toggle('ri-star-s-fill', i < currentRating);
-            s.classList.toggle('ri-star-line', i >= currentRating);
-          });
-          document.getElementById('userRatingValue').innerText = currentRating;
-        });
       });
-      document.getElementById('reviewForm').onsubmit = function(e) {
-        e.preventDefault();
-        const text = document.getElementById('userReviewText').value.trim();
-        if (!currentRating || !text) {
-          alert('Vui lòng chọn số sao và nhập nhận xét!');
-          return;
-        }
-        const reviews = JSON.parse(localStorage.getItem('bookReviews_' + bookId) || '[]');
-        reviews.unshift({
-          name: 'Người dùng',
-          rating: currentRating,
-          text,
-          date: new Date().toLocaleString('vi-VN')
-        });
-        localStorage.setItem('bookReviews_' + bookId, JSON.stringify(reviews));
-        document.getElementById('userReviewText').value = '';
-        currentRating = 0;
-        stars.forEach((s, i) => {
-          s.classList.remove('ri-star-s-fill');
-          s.classList.add('ri-star-line');
-        });
-        document.getElementById('userRatingValue').innerText = '0';
-        renderUserReviews(bookId);
-      };
     }
-    // Gọi sau khi renderBook
-    function afterRenderBook(book) {
-      const bookId = (book && (book._id || book.id)) || '';
-      renderUserReviews(bookId);
-      setupReviewForm(bookId);
+
+    function resetReviewForm() {
+      selectedRating = 0;
+      document.getElementById('reviewComment').value = '';
+      highlightStars(0);
     }
-    // Sửa fetchBookAndRender để gọi afterRenderBook
-    async function fetchBookAndRender() {
-      function getBookSlugFromUrl() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('slug')) return params.get('slug');
-        if (window.location.hash.startsWith('#slug=')) {
-          return window.location.hash.replace('#slug=', '');
-        }
-        const match = window.location.pathname.match(/books\/(.+?)(?:\.html)?$/);
-        if (match) return match[1];
-        return '';
-      }
-      function toSlug(str) {
-        return str
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/đ/g, 'd')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      }
-      const slug = getBookSlugFromUrl();
-      if (!slug) {
-        document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-        document.getElementById('bookDesc').innerText = '';
+
+    async function submitReview() {
+      if (!currentBook) return;
+
+      const comment = document.getElementById('reviewComment').value.trim();
+
+      if (selectedRating === 0) {
+        alert('Vui lòng chọn số sao đánh giá');
         return;
       }
-      // Ưu tiên lấy book từ sessionStorage nếu có
-      let book = null;
-      const stored = sessionStorage.getItem('selectedBook');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (toSlug(parsed.title) === slug) {
-            book = parsed;
-          }
-        } catch {}
+
+      if (!comment) {
+        alert('Vui lòng nhập nhận xét');
+        return;
       }
-      if (!book) {
-        try {
-          const res = await fetch('http://localhost:5000/api/books');
-          let data = await res.json();
-          let books = Array.isArray(data.books) ? data.books : data;
-          const found = books.find(b => toSlug(b.title) === slug);
-          if (!found) {
-            document.getElementById('bookTitle').innerText = 'Không tìm thấy sách!';
-            document.getElementById('bookDesc').innerText = '';
-            return;
-          }
-          book = found;
-        } catch (e) {
-          document.getElementById('bookTitle').innerText = 'Không thể lấy dữ liệu sách từ API!';
-          document.getElementById('bookDesc').innerText = 'Vui lòng kiểm tra lại kết nối hoặc thử lại sau.';
-          return;
-        }
+
+      try {
+        const submitBtn = document.getElementById('submitReviewBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Đang gửi...';
+
+        await ApiService.addReview(currentBook._id, selectedRating, comment);
+
+        // Reset form and hide it
+        resetReviewForm();
+        document.getElementById('reviewForm').classList.add('hidden');
+
+        // Reload reviews
+        await loadReviews();
+
+        alert('Đánh giá của bạn đã được gửi thành công!');
+
+      } catch (error) {
+        console.error('Error submitting review:', error);
+        alert('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.');
+      } finally {
+        const submitBtn = document.getElementById('submitReviewBtn');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Gửi đánh giá';
       }
-      await renderBook(book);
-      afterRenderBook(book);
     }
+
+    async function loadReviews() {
+      if (!currentBook) return;
+
+      try {
+        const response = await ApiService.getReviews(currentBook._id);
+        console.log('📖 [Reviews] Raw response:', response);
+
+        const reviewsList = document.getElementById('reviewsList');
+        const noReviewsMessage = document.getElementById('noReviewsMessage');
+
+        // Handle different response formats
+        let reviews = [];
+        if (response.reviews && Array.isArray(response.reviews)) {
+          reviews = response.reviews;
+        } else if (Array.isArray(response)) {
+          reviews = response;
+        } else if (response.data && Array.isArray(response.data)) {
+          reviews = response.data;
+        } else if (response.success && response.reviews) {
+          reviews = response.reviews;
+        }
+
+        console.log('📖 [Reviews] Processed reviews:', reviews);
+        console.log('📖 [Reviews] Number of reviews:', reviews.length);
+
+        if (reviews.length === 0) {
+          reviewsList.innerHTML = '';
+          noReviewsMessage.classList.remove('hidden');
+          console.log('📖 [Reviews] No reviews found, showing empty message');
+        } else {
+          noReviewsMessage.classList.add('hidden');
+          reviewsList.innerHTML = reviews.map(review => {
+            console.log('📖 [Reviews] Processing review:', {
+              id: review._id,
+              reviewer: review.reviewer?.name || 'Unknown',
+              rating: review.rating,
+              createdAt: review.createdAt,
+              content: review.content?.substring(0, 50) + '...' || 'No content'
+            });
+            return createReviewHTML(review);
+          }).join('');
+          console.log('📖 [Reviews] Reviews rendered successfully');
+        }
+
+      } catch (error) {
+        console.error('❌ [Reviews] Error loading reviews:', error);
+        const reviewsList = document.getElementById('reviewsList');
+        const noReviewsMessage = document.getElementById('noReviewsMessage');
+
+        reviewsList.innerHTML = '';
+        noReviewsMessage.classList.remove('hidden');
+        noReviewsMessage.innerHTML = `
+          <div class="text-center text-red-500 py-8">
+            <i class="ri-error-warning-line text-4xl mb-2"></i>
+            <p>Không thể tải đánh giá. Vui lòng thử lại sau.</p>
+            <p class="text-sm mt-1">${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function createReviewHTML(review) {
+      const stars = Array.from({ length: 5 }, (_, i) => {
+        const filled = i < review.rating;
+        return `<i class="ri-star-${filled ? 'fill' : 'line'} text-yellow-400"></i>`;
+      }).join('');
+
+      // Use createdAt from timestamps for review date
+      let reviewDate = 'Không rõ ngày';
+      try {
+        if (review.createdAt) {
+          const date = new Date(review.createdAt);
+          if (!isNaN(date.getTime())) {
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+              reviewDate = 'Hôm qua';
+            } else if (diffDays < 7) {
+              reviewDate = `${diffDays} ngày trước`;
+            } else if (diffDays < 30) {
+              const weeks = Math.floor(diffDays / 7);
+              reviewDate = weeks === 1 ? '1 tuần trước' : `${weeks} tuần trước`;
+            } else {
+              // Show full date for older reviews
+              reviewDate = date.toLocaleDateString('vi-VN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('Invalid createdAt date in review:', review);
+        reviewDate = 'Không rõ ngày';
+      }
+
+      // Handle different customer/reviewer structures from backend
+      let customerName = 'Khách hàng';
+      if (review.reviewer && review.reviewer.name) {
+        customerName = review.reviewer.name;
+      } else if (review.customer && review.customer.name) {
+        customerName = review.customer.name;
+      } else if (review.customerName) {
+        customerName = review.customerName;
+      } else if (review.reviewerName) {
+        customerName = review.reviewerName;
+      }
+
+      // Handle different content fields from backend
+      let reviewContent = '';
+      if (review.content) {
+        reviewContent = review.content;
+      } else if (review.comment) {
+        reviewContent = review.comment;
+      } else if (review.reviewText) {
+        reviewContent = review.reviewText;
+      }
+
+      return `
+        <div class="border-b border-gray-200 pb-4 mb-4 last:border-b-0">
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <div class="font-semibold text-gray-800">${customerName}</div>
+              <div class="flex items-center gap-2">
+                <div class="flex">${stars}</div>
+                <span class="text-sm text-gray-500">${reviewDate}</span>
+              </div>
+            </div>
+          </div>
+          <p class="text-gray-700">${reviewContent}</p>
+        </div>
+      `;
+    }
+
+        // Test wishlist button functionality
+    function testWishlistButton() {
+      setTimeout(() => {
+        const wishlistBtn = document.getElementById('wishlistBtn');
+        if (wishlistBtn) {
+          console.log('🧪 [Test] Wishlist button found:', wishlistBtn);
+          console.log('🧪 [Test] Button style:', {
+            display: window.getComputedStyle(wishlistBtn).display,
+            visibility: window.getComputedStyle(wishlistBtn).visibility,
+            pointerEvents: window.getComputedStyle(wishlistBtn).pointerEvents,
+            zIndex: window.getComputedStyle(wishlistBtn).zIndex
+          });
+          
+          // Try to trigger click programmatically
+          wishlistBtn.click();
+        } else {
+          console.error('🧪 [Test] Wishlist button not found!');
+        }
+      }, 2000);
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async function () {
+      // Debug AuthManager availability
+      console.log('🔍 [BookDetail] AuthManager available:', typeof window.AuthManager !== 'undefined');
+      console.log('🔍 [BookDetail] AuthManager methods:', window.AuthManager ? Object.getOwnPropertyNames(window.AuthManager) : 'N/A');
+      
+      // Initialize UI controls first
+      initQuantityControls();
+      initAddToCart();
+      initWishlist();
+      initReviews();
+      
+      // Load book data
+      await loadBookData();
+      
+      // Only proceed if book was loaded successfully
+      if (currentBook) {
+        console.log('✅ [Init] Book loaded, checking favourites and reviews');
+        
+        // Add small delay to ensure UI is fully rendered
+        setTimeout(async () => {
+          await Promise.all([
+            checkFavouriteStatus(),
+            loadReviews()
+          ]);
+        }, 100);
+      } else {
+        console.log('❌ [Init] No book loaded, skipping favourites check');
+      }
+      
+      // Test button after everything is loaded
+      // testWishlistButton(); // Disabled to avoid interference
+    });
   </script>
 </body>
 

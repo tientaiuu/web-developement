@@ -33,6 +33,7 @@ app.use('/api/auth', require('./Backend/src/routes/auth.routes'));
 app.use('/api/customer', require('./Backend/src/routes/customer.routes'));
 app.use('/api/rules', require('./Backend/src/routes/rule.routes'))
 app.use('/api/books', require('./Backend/src/routes/book.routes'))
+app.use('/api/category', require('./Backend/src/routes/category.routes'))
 app.use('/api/import-slip', require('./Backend/src/routes/importslip.routes'))
 app.use('/api/invoice', require('./Backend/src/routes/salesinvoice.routes'))
 app.use('/api/invoice', require('./Backend/src/routes/rentalinvoice.routes'))
@@ -41,13 +42,6 @@ app.use('/api/reports', require('./Backend/src/routes/report.routes'))
 app.use('/api/favourite', require('./Backend/src/routes/favourite.routes'))
 app.use('/api/reviews', require('./Backend/src/routes/review.routes'))
 app.use('/api/cart', require('./Backend/src/routes/cart.routes'))
-
-// Phục vụ tĩnh các thư mục con của Frontend
-app.use('/assets', express.static(path.resolve(__dirname, 'Frontend/assets')));
-app.use('/components', express.static(path.resolve(__dirname, 'Frontend/components')));
-app.use('/pages', express.static(path.resolve(__dirname, 'Frontend/pages')));
-
-
 
 // Serve static files (HTML, CSS, JS, images) from Frontend folder
 app.use(express.static(path.join(__dirname, 'Frontend')));
@@ -62,6 +56,9 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/pages', 'login.html'));
 });
+app.get('/searchBooks', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend/pages', 'searchBooks.html'));
+});
 app.get('/books', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/pages', 'books.html'));
 });
@@ -71,15 +68,6 @@ app.get('/about', (req, res) => {
 app.get('/bookDetail', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/pages', 'bookDetail.html'));
 });
-
-app.get('/books/:slug', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'Frontend/pages/bookDetail.html'));
-});
-
-app.get('/searchBooks', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'Frontend/pages/searchBooks.html'));
-});
-
 app.get('/settings', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend/pages', 'settingA.html'));
 });
